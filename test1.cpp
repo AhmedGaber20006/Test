@@ -1,18 +1,36 @@
 #include <iostream>
 #include <string>
+#include <cmath>
 #include <fstream>
 #include <ctime>
 #include <conio.h>
 #include <limits>
+#include <algorithm>
 
 #pragma region defined constants
 #define number_of_users_and_admin 1001
 #define n 1
 
-#define line1 35
-#define line2 20
+#define kit_kat_1_station 78 // Kit Kat to Rod El Farag
+#define kit_kat_2_station 85 // Kit Kat to Cairo University
+#define Rod_axis_station 84
+#define start_line1 1
+#define end_line1 35
+#define start_line2 36
+#define end_line2 55
+#define start_line3 56
+#define end_line3 89
+#define Al_Shohadaa_line1 14
+#define Al_Shohadaa_line2 43
+#define Attaba_line2 44
+#define Attaba_line3 74
+#define Nasser_line1 16
+#define Nasser_line3 75
+#define stations_of_Rod_branch 6
 #pragma endregion
 
+int start_station = 0, end_station = 0, count = 0;
+int start_line = 0, end_line = 0, answer = 0;
 using namespace std;
 
 #pragma region Global variables, Arrays & Structs
@@ -153,7 +171,6 @@ string zone_10[10] = {"Adly Mansour", "Haykestep", "Omar Ibn El Khattab", "Qubaa
 
 #pragma region function decleared
 // Sign-in, Registration & Admin Capabilities
-int register_or_login();
 string hidding_password_write(string &password);
 string strong_pass();
 bool check_if_id_unique(int id);
@@ -165,6 +182,7 @@ void view_all_accounts();
 void modifying_account(int ID = 0);
 void delete_account();
 void check_choice(int &choice);
+void user_main_menu();
 void login_form();
 char exit_or_not();
 
@@ -188,23 +206,35 @@ void enter_startline();
 void enter_endline();
 int choose_line(int line_num, int station_num);
 void input_start_data(int &start_line, int &start);
-void input_end_data(int &end_line, int &end);
-void case1(int &start, int &end, int trans1, int trans2, int start_line, string arr[]);
-void case2(int &start, int &end, int trans1, int trans2, int start_line, string arr[]);
-void case3(int &start, int &end, int trans1, int trans2, int start_line, string arr[]);
-void case4(int &start, int &end, int trans1, int trans2, int start_line, string arr[]);
-void cases(int &start, int &end, int trans1, int trans2, int start_line, string arr[]);
-void list_intersect_line_1_2(int &start, int &end, string arr[], int start_line, int trans1 = 14, int trans2 = 43);
-void list_intersect_line_2_3(int &start, int &end, string arr[], int start_line, int trans2 = 44, int trans3 = 74);
-void list_intersect_line_1_3(int &start, int &end, string arr[], int start_line, int trans1 = 16, int trans3 = 75);
-int counting_intersected_stations(int &start, int &end, int trans1, int trans2);
-void if_intersection(int &start, int &end, int &start_line, int &end_line, string arr[], int &answer);
-int kit_kat_check(int &end, int &start);
-void kitkat_branches(int &end, int &start);
-void list_same_line(int &start, int &end, int start_line, string arr[], user_struct users[]);
-void if_same_line(int &start, int &end, int &end_line, int &start_line, int &answer);
-void check_line(int &start_line, int &end_line, int &end, int &start, string arr[], int &answer);
-void start_calc(int &start, int &end, int &end_line, int &start_line, int answer);
+void input_end_data(int &end_line, int &end_station);
+void start_loop_odd_cases(int i, int &start, int &end_station, int trans1, int trans2, string arr[]);
+void start_loop_even_cases(int i, int &start, int &end_station, int trans1, int trans2, string arr[]);
+void end_loop(int i, int end_station, string arr[]);
+void same_line_loop(int i, int start, string arr[]);
+void case1(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case2(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case3(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case4(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case5(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case6(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case7(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case8(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void cases(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void list_intersect_line_1_2(int &start, int &end_station, string arr[], int trans1, int trans2);
+void list_intersect_line_2_3(int &start, int &end_station, string arr[], int trans2, int trans3);
+void list_intersect_line_1_3(int &start, int &end_station, string arr[], int trans1, int trans3);
+int counting_intersected_stations(int &start, int &end_station, int trans1, int trans2);
+void if_intersection(int &start, int &end_station, int &start_line, int &end_line, string arr[], int answer);
+int kit_kat_check(int &end_station, int &start);
+void kitkat_branches(int &end_station, int &start);
+void list_same_line(int &start, int &end_station, string arr[], user_struct arr_users[]);
+void if_same_line(int &start, int &end_station, int &end_line, int &start_line, int answer);
+void check_line(int &start_line, int &end_line, int &end_station, int &start, string arr[], int answer);
+int counting_Rod_to_Cairo(int &end_station, int &start);
+int counting_Cairo_to_Rod(int &end_station, int &start);
+void Rod_to_Cairo_list(int &end_station, int &start, int answer);
+void Cairo_to_Rod_list(int &end_station, int &start, int answer);
+void start_calc(int &start, int &end_station, int &end_line, int &start_line, int answer);
 int current_zone_check(string stations);
 void zone_checker(string stations[], int &current_zone, int i, int &zone_counter);
 int station_to_zone(int numberofstations);
@@ -212,9 +242,9 @@ int string_to_int_zone();
 bool zone_to_zone_check(int selected_zone);
 int zone_to_price(int selected_zone);
 void trips_deduction_general_or_scholar();
+void check_out(int answer, int selected_zone);
 void wallet_dedcution(int selected_zone);
-void check_out(int &answer, int selected_zone);
-void trip_not_valid(int start, int end, int end_line, int start_line, int &answer);
+void trip_not_valid(int start, int end_station, int end_line, int start_line, int answer);
 void system_ride();
 
 // History & Statistics
@@ -226,29 +256,41 @@ void read_statistics();
 #pragma endregion
 
 #pragma region signin,Registration & Admin capabilities
-int register_or_login()
+
+void start_menu()
 {
-    int choose;
-
-    cout << "Choose 1 to register \n2 to login\n";
-    cin >> choose;
-
-    while (cin.fail())
+    while (true)
     {
-        cin.clear();
-        cin.ignore(20, '\n');
-        cout << "You have enter a invalid type \nPlease enter int digit\n";
-        cin >> choose;
-    }
+        while (true)
+        {
+            int choose;
 
-    if (choose == 1)
-        return 1;
-    else if (choose == 2)
-        return 2;
-    else
-    {
-        cout << "Invalid choice !! you must type 1 or 2 only\n";
-        return -1;
+            cout << "Choose 1 to register \n2 to login\n";
+            cin >> choose;
+
+            while (cin.fail())
+            {
+                cin.clear();
+                cin.ignore(20, '\n');
+                cout << "You have enter a invalid type \nPlease enter int digit\n";
+                cin >> choose;
+            }
+
+            if (choose == 1)
+            {
+                cout << "You have chosen to register\n";
+                register_form();
+            }
+            else if (choose == 2)
+            {
+                cout << "You have chosen to login\n";
+                login_form();
+            }
+            else
+            {
+                cout << "Invalid choice !! you must type 1 or 2 only\n";
+            }
+        }
     }
 }
 
@@ -372,6 +414,14 @@ void Base_regiseter_to_user_or_admin()
     }
     cout << "Please Enter your password must be 8 or more character and digit\n";
     arr_user[global_id].password = strong_pass();
+    cout << "Please Enter Password again to confirm\n";
+    string confirm = hidding_password_write(confirm);
+    while (arr_user[global_id].password != confirm)
+    {
+        cout << "The password is not the same\n";
+        cout << "Please Enter Password again to confirm\n";
+        confirm = hidding_password_write(confirm);
+    }
 }
 
 void register_form()
@@ -557,7 +607,7 @@ void view_all_accounts()
         cout << "No accounts found.\n";
 }
 
-void modifying_account(int ID = 0)
+void modifying_account(int ID)
 {
     while (true)
     {
@@ -653,6 +703,115 @@ void check_choice(int &choice)
     }
 }
 
+void user_main_menu()
+{
+    while (true)
+    {
+        cout << "What do you want to do\npress 1 to go to subscription System \n";
+        cout << "press 2 to Modify your account data\n";
+        cout << "press 3 to top up your balance\n";
+        cout << "press 4 to go ride\n";
+        cout << "press 5 to show history\n";
+        cout << "press 0 to log out\n";
+        int choicee;
+        cin >> choicee;
+        while (cin.fail() || choicee < 1 || choicee > 5)
+        {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "Invalid choice! Please enter 1, 2, 3, 4 or 5: \n";
+            cin >> choicee;
+        }
+        if (choicee == 1)
+        {
+            tm localTime;
+            time_t now;
+            initializeLocalTime(localTime, now);
+            system_function();
+        }
+        else if (choicee == 2)
+        {
+            modifying_account(id);
+        }
+        else if (choicee == 3)
+        {
+            int addon = 0;
+            cout << "Please Enter the the amount of money you want to top up your balance with\n";
+            cin >> addon;
+            while (cin.fail())
+            {
+                cin.clear();
+                cin.ignore();
+                cin >> addon;
+            }
+            users[id].balance += addon;
+            cout << "Now you balacnce = " << users[id].balance << '\n';
+        }
+        else if (choicee == 4)
+        {
+            if (subscipetion_or_not[global_id] == 0)
+            {
+
+                cout << "You have to subscribe first\n";
+                tm localTime;
+                time_t now;
+                initializeLocalTime(localTime, now);
+                system_function();
+            }
+
+            while (subscipetion_or_not[global_id] == 1)
+            {
+                system_ride();
+                cout << "Do you want to user home agian or book another ride (y/n)\n";
+                char choice;
+                cin >> choice;
+                choice = toupper(choice);
+                while (choice != 'Y' && choice != 'N')
+                {
+                    cout << "Invalid choice! Please enter 'y' for Yes or 'n' for No: \n";
+                    cin >> choice;
+                    choice = toupper(choice);
+                }
+                if (choice == 'N')
+                {
+                    system_ride();
+                }
+                else if (choice == 'Y')
+                {
+                    break;
+                }
+                else
+                {
+                    cout << "Invalid choice! Please enter 'y' for Yes or 'n' for No: \n";
+                }
+            }
+        }
+        else if (choicee == 5)
+        {
+            user_history(global_id);
+        }
+        else if (choicee == 0)
+        {
+            start_menu();
+        }
+
+        cout << "Do you want terminate The Program ?(y/n): ";
+        char choice;
+        cin >> choice;
+        choice = toupper(choice);
+        while (choice != 'Y' && choice != 'N')
+        {
+            cout << "Invalid choice! Please enter 'y' for Yes or 'n' for No: ";
+            cin >> choice;
+            choice = toupper(choice);
+        }
+        if (choice == 'Y')
+        {
+            break;
+        }
+    }
+}
+
 void login_form()
 {
     while (true)
@@ -682,50 +841,58 @@ void login_form()
 
         if (arr_user[id].role == 'A')
         {
-            if (password == arr_user[id].password)
+            while (true)
             {
-                cout << "\nYou have logged in successfully as Admin\n";
-                cout << "Hello " << arr_user[id].name << endl;
-                cout << "What do you want to do\npress 1 to modify certain account data\n";
-                cout << "press 2 to delete certain account data\n";
-                cout << "press 3 to view all accounts\n";
-                cout << "press 4 to add subscription to certain account\n";
-                cout << "press 5 to show statistics\n";
-                int choice;
-                cin >> choice;
-
-                // التحقق من صحة الاختيار
-                while (cin.fail() || choice < 1 || choice > 5)
+                if (password == arr_user[id].password)
                 {
-                    cin.clear();
-                    cin.ignore(10000, '\n');
-                    cout << "Invalid choice! Please enter 1, 2, 3, 4 or 5: \n";
+
+                    cout << "\nYou have logged in successfully as Admin\n";
+                    cout << "Hello " << arr_user[id].name << endl;
+                    cout << "What do you want to do\npress 1 to modify certain account data\n";
+                    cout << "press 2 to delete certain account data\n";
+                    cout << "press 3 to view all accounts\n";
+                    cout << "press 4 to add subscription to certain account\n";
+                    cout << "press 5 to show statistics\n";
+                    cout << "press 0 to logout\n";
+                    int choice;
                     cin >> choice;
+
+                    while (cin.fail() || choice < 0 || choice > 5)
+                    {
+                        cin.clear();
+                        cin.ignore(10000, '\n');
+                        cout << "Invalid choice! Please enter 1, 2, 3, 4 or 5: \n";
+                        cin >> choice;
+                    }
+
+                    if (choice == 1)
+                        modifying_account();
+
+                    else if (choice == 2)
+                        delete_account();
+
+                    else if (choice == 3)
+                        view_all_accounts();
+
+                    else if (choice == 4)
+                    {
+                        tm localTime;
+                        time_t now;
+                        initializeLocalTime(localTime, now);
+                        system_function();
+                    }
+                    else if (choice == 5)
+                    {
+                        statistics();
+                    }
+                    else if (choice == 0)
+                    {
+                        break;
+                    }
                 }
-
-                if (choice == 1)
-                    modifying_account();
-
-                else if (choice == 2)
-                    delete_account();
-
-                else if (choice == 3)
-                    view_all_accounts();
-
-                else if (choice == 4)
-                {
-                    tm localTime;
-                    time_t now;
-                    initializeLocalTime(localTime, now);
-                    system_function();
-                }
-                else if (choice == 5)
-                    statistics();
-
-                break;
+                else
+                    cout << "Incorrect password for Admin! Please try again.\n";
             }
-            else
-                cout << "Incorrect password for Admin! Please try again.\n";
         }
         else if (arr_user[id].role == 'U')
         {
@@ -733,105 +900,7 @@ void login_form()
             {
                 cout << "\nYou have logged in successfully as User\n";
                 cout << "Hello " << arr_user[id].name << endl;
-                while (true)
-                {
-                    cout << "What do you want to do\npress 1 to go to subscription System \n";
-                    cout << "press 2 to Modify your account data\n";
-                    cout << "press 3 to top up your balance\n";
-                    cout << "press 4 to go ride\n";
-                    cout << "press 5 to show history\n";
-                    int choicee;
-                    cin >> choicee;
-                    while (cin.fail() || choicee < 1 || choicee > 5)
-                    {
-                        cin.clear();
-                        cin.ignore(10000, '\n');
-                        cout << "Invalid choice! Please enter 1, 2, 3, 4 or 5: \n";
-                        cin >> choicee;
-                    }
-                    if (choicee == 1)
-                    {
-                        tm localTime;
-                        time_t now;
-                        initializeLocalTime(localTime, now);
-                        system_function();
-                    }
-                    else if (choicee == 2)
-                    {
-                        modifying_account(id);
-                    }
-                    else if (choicee == 3)
-                    {
-                        int addon = 0;
-                        cout << "Please Enter the the amount of money you want to top up your balance with\n";
-                        cin >> addon;
-                        while (cin.fail())
-                        {
-                            cin.clear();
-                            cin.ignore();
-                            cin >> addon;
-                        }
-                        arr_user[id].balance += addon;
-                        cout << "Now you balacnce = " << arr_user[id].balance << '\n';
-                    }
-                    else if (choicee == 4)
-                    {
-                        if (subscipetion_or_not[global_id] == 0)
-                        {
-
-                            cout << "You have to subscribe first\n";
-                            tm localTime;
-                            time_t now;
-                            initializeLocalTime(localTime, now);
-                            system_function();
-                        }
-
-                        while (subscipetion_or_not[global_id] == 1)
-                        {
-                            system_ride();
-                            cout << "Do you want to user home agian or book another ride (y/n)\n";
-                            char choice;
-                            cin >> choice;
-                            choice = toupper(choice);
-                            while (choice != 'Y' && choice != 'N')
-                            {
-                                cout << "Invalid choice! Please enter 'y' for Yes or 'n' for No: \n";
-                                cin >> choice;
-                                choice = toupper(choice);
-                            }
-                            if (choice == 'N')
-                            {
-                                system_ride();
-                            }
-                            else if (choice == 'Y')
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                cout << "Invalid choice! Please enter 'y' for Yes or 'n' for No: \n";
-                            }
-                        }
-                    }
-
-                    else if (choicee == 5)
-                        user_history(global_id);
-
-                    cout << "Do you want terminate The Program ?(y/n): ";
-                    char choice;
-                    cin >> choice;
-                    choice = toupper(choice);
-                    while (choice != 'Y' && choice != 'N')
-                    {
-                        cout << "Invalid choice! Please enter 'y' for Yes or 'n' for No: ";
-                        cin >> choice;
-                        choice = toupper(choice);
-                    }
-                    if (choice == 'Y')
-                    {
-                        break;
-                    }
-                }
+                user_main_menu();
                 break;
             }
             else
@@ -1292,7 +1361,7 @@ void menu()
         switch (option)
         {
         case 0:
-            break;
+            user_main_menu();
         case 1:
             if (subscipetion_or_not[global_id] == 0)
             {
@@ -1417,27 +1486,35 @@ void enter_startline();
 void enter_endline();
 int choose_line(int line_num, int station_num);
 void input_start_data(int &start_line, int &start);
-void input_end_data(int &end_line, int &end);
-void case1(int &start, int &end, int trans1, int trans2, int start_line, string arr[]);
-void case2(int &start, int &end, int trans1, int trans2, int start_line, string arr[]);
-void case3(int &start, int &end, int trans1, int trans2, int start_line, string arr[]);
-void case4(int &start, int &end, int trans1, int trans2, int start_line, string arr[]);
-void cases(int &start, int &end, int trans1, int trans2, int start_line, string arr[]);
-void list_intersect_line_1_2(int &start, int &end, string arr[], int start_line, int trans1, int trans2);
-void list_intersect_line_2_3(int &start, int &end, string arr[], int start_line, int trans2, int trans3);
-void list_intersect_line_1_3(int &start, int &end, string arr[], int start_line, int trans1, int trans3);
-int counting_intersected_stations(int &start, int &end, int trans1, int trans2);
-void if_intersection(int &start, int &end, int &start_line, int &end_line, string arr[], int &answer);
-int kit_kat_check(int &end, int &start);
-void kitkat_branches(int &end, int &start);
-void list_same_line(int &start, int &end, int start_line, string arr[], user_struct users[]);
-void if_same_line(int &start, int &end, int &end_line, int &start_line, int &answer);
-void check_line(int &start_line, int &end_line, int &end, int &start, string arr[], int &answer);
-void counting_Rod_to_Cairo(int &end, int &start);
-void counting_Cairo_to_Rod(int &end, int &start);
-void Rod_to_Cairo_list(int &end, int &start);
-void Cairo_to_Rod_list(int &end, int &start);
-void start_calc(int &start, int &end, int &end_line, int &start_line, int answer);
+void input_end_data(int &end_line, int &end_station);
+void start_loop_odd_cases(int i, int &start, int &end_station, int trans1, int trans2, string arr[]);
+void start_loop_even_cases(int i, int &start, int &end_station, int trans1, int trans2, string arr[]);
+void end_loop(int i, int end_station, string arr[]);
+void same_line_loop(int i, int start, string arr[]);
+void case1(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case2(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case3(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case4(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case5(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case6(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case7(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case8(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void cases(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void list_intersect_line_1_2(int &start, int &end_station, string arr[], int trans1, int trans2);
+void list_intersect_line_2_3(int &start, int &end_station, string arr[], int trans2, int trans3);
+void list_intersect_line_1_3(int &start, int &end_station, string arr[], int trans1, int trans3);
+int counting_intersected_stations(int &start, int &end_station, int trans1, int trans2);
+void if_intersection(int &start, int &end_station, int &start_line, int &end_line, string arr[], int answer);
+int kit_kat_check(int &end_station, int &start);
+void kitkat_branches(int &end_station, int &start);
+void list_same_line(int &start, int &end_station, string arr[], user_struct arr_users[]);
+void if_same_line(int &start, int &end_station, int &end_line, int &start_line, int answer);
+void check_line(int &start_line, int &end_line, int &end_station, int &start, string arr[], int answer);
+int counting_Rod_to_Cairo(int &end_station, int &start);
+int counting_Cairo_to_Rod(int &end_station, int &start);
+void Rod_to_Cairo_list(int &end_station, int &start, int answer);
+void Cairo_to_Rod_list(int &end_station, int &start, int answer);
+void start_calc(int &start, int &end_station, int &end_line, int &start_line, int answer);
 int current_zone_check(string stations);
 void zone_checker(string stations[], int &current_zone, int i, int &zone_counter);
 int station_to_zone(int numberofstations);
@@ -1445,529 +1522,438 @@ int string_to_int_zone();
 bool zone_to_zone_check(int selected_zone);
 int zone_to_price(int selected_zone);
 void trips_deduction_general_or_scholar();
-void check_out(int &answer, int selected_zone);
+void check_out(int answer, int selected_zone);
 void wallet_dedcution(int selected_zone);
-void trip_not_valid(int start, int end, int end_line, int start_line, int &answer);
+void trip_not_valid(int start, int end_station, int end_line, int start_line, int answer);
 // void initialize_users();
 void system_ride();
-void case1(int &start, int &end, int trans1, int trans2, int start_line, string arr[])
+
+void start_loop_odd_cases(int i, int &start, int &end_station, int trans1, int trans2, string arr[])
 {
-    int current_zone = current_zone_check(stations[start - 1]);
+
+    if (i == trans1 && i != start)
+    {
+        cout << "\t\t\t\t\t| " << endl
+             << "\t\t\t\t\tV " << endl;
+        if (trans2 != end_station)
+            cout << "\t\t\t\t     " << arr[i - 1] << endl
+                 << "\n\t\t     =========> Changing Line <=========\n"
+                 << endl; // Arrow indicating transition between lines
+    }
+    else if (i != start)
+    {
+        cout << "\t\t\t\t\t| " << endl
+             << "\t\t\t\t\tV " << endl
+             << "\t\t\t\t     " << arr[i - 1] << endl;
+    }
+    else if (i == start_station && i != trans1)
+    {
+        cout << "\t\t\t\t     " << arr[start_station - 1] << endl;
+    }
+}
+
+void start_loop_even_cases(int i, int &start, int &end_station, int trans1, int trans2, string arr[])
+{
+    if (i == trans2 && i != start)
+    {
+        cout << "\t\t\t\t\t| " << endl
+             << "\t\t\t\t\tV " << endl;
+        if (trans1 != end_station)
+            cout << "\t\t\t\t       " << arr[i - 1] << endl
+                 << "\n\t\t     =========> Changing Line <=========\n"
+                 << endl; // Arrow indicating transition between lines
+    }
+    else if (i != start)
+    {
+        cout << "\t\t\t\t\t| " << endl
+             << "\t\t\t\t\tV " << endl
+             << "\t\t\t\t       " << arr[i - 1] << endl;
+    }
+    else if (i == start_station && i != trans2)
+    {
+        cout << "\t\t\t\t       " << arr[start_station - 1] << endl;
+    }
+}
+
+void end_loop(int i, int end_station, string arr[])
+{
+    if (i != end_station)
+    {
+        cout << "\t\t\t\t     " << arr[i - 1] << endl
+             << "\t\t\t\t\t|" << endl
+             << "\t\t\t\t\tV" << endl;
+    }
+
+    else
+    {
+        cout << "\t\t\t\t     " << arr[end_station - 1] << endl;
+    }
+}
+
+void case1(int &start, int &end_station, int trans1, int trans2, string arr[])
+{
+    int current_zone = current_zone_check(stations[start_station - 1]);
     int zone_counter = 1;
-    if (start < end) // starting ascendingly according to the line rank
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    cout << "|                                Your Metro MaP                               |" << endl;
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    for (int i = start; i <= trans1; i++) // Display stations of first line (from start_stationto trans)
     {
 
-        if ((start <= trans1) && (end <= trans2)) // start before trans and end before trans
-        {
-
-            for (int i = start; i < trans1; i++) // Display stations of first line (from start to trans)
-            {
-                if (i == trans1 - 1)
-                {
-                    cout << "   | " << endl
-                         << "   V " << endl
-                         << arr[i - 1];
-                }
-                else if (i != start)
-                {
-                    cout << "   | " << endl
-                         << "   V " << endl
-                         << arr[i - 1] << endl;
-                }
-                else
-                {
-                    cout << endl
-                         << arr[start - 1] << endl;
-                }
-
-                zone_checker(stations, current_zone, i, zone_counter);
-            }
-
-            cout << "  =====> "; // Arrow indicating transition between lines
-
-            for (int i = trans2; i >= end; i--) // Display stations of second line (from trans to end)
-            {
-                if (i == trans2)
-                {
-                    cout << arr[i - 1] << endl
-                         << "\t\t   |" << endl
-                         << "\t\t   V" << endl;
-                }
-                else if (i != end)
-                {
-                    cout << "\t\t" << arr[i - 1] << endl
-                         << "\t\t   |" << endl
-                         << "\t\t   V" << endl;
-                }
-                else
-                {
-                    cout << "\t\t" << arr[end - 1] << endl;
-                }
-                zone_checker(stations, current_zone, i, zone_counter);
-            }
-
-            cout << "Number of geographical zones = " << zone_counter << endl;
-        }
+        start_loop_odd_cases(i, start, end_station, trans1, trans2, stations);
+        zone_checker(stations, current_zone, i, zone_counter);
     }
-    else if (start > end) // starting descendingly according to the line rank
+
+    for (int i = trans2; i >= end_station; i--) // Display stations of second line (from trans to end_station)
     {
+        end_loop(i, end_station, stations);
 
-        if ((start <= trans2) && (end <= trans1)) // start before trans and end before trans
-        {
-            for (int i = start; i <= trans2; i++) // Display stations of second line (from start to trans)
-            {
-                if (i != start)
-                {
-                    cout << "   | " << endl
-                         << "   V " << endl
-                         << arr[i - 1] << endl;
-                }
-                else
-                {
-                    cout << endl
-                         << arr[start - 1] << endl;
-                }
-                zone_checker(stations, current_zone, i, zone_counter);
-            }
-
-            cout << "   =====> " << endl; // Arrow indicating transition between lines
-
-            for (int i = trans1; i >= end; i--) // Display stations of first line (from trans to end)
-            {
-                if (i == trans2)
-                {
-                    cout << arr[i - 1] << endl
-                         << "\t\t   |" << endl
-                         << "\t\t   V" << endl;
-                }
-                else if (i != end)
-                {
-                    cout << "\t\t" << arr[i - 1] << endl
-                         << "\t\t   |" << endl
-                         << "\t\t   V" << endl;
-                }
-                else
-                {
-                    cout << "\t\t" << arr[end - 1] << endl;
-                }
-                zone_checker(stations, current_zone, i, zone_counter);
-            }
-
-            cout << "Number of geographical zones = " << zone_counter << endl;
-        }
+        zone_checker(stations, current_zone, i, zone_counter);
     }
+    if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
+        cout << endl
+             << "Number of geographical zones = " << zone_counter << endl;
 }
 
-void case2(int &start, int &end, int trans1, int trans2, int start_line, string arr[]) // start before trans and end after trans
+void case2(int &start, int &end_station, int trans1, int trans2, string arr[])
 {
-    int current_zone = current_zone_check(stations[start - 1]);
+    int current_zone = current_zone_check(stations[start_station - 1]);
     int zone_counter = 1;
-    if (start < end) // starting ascendingly according to the line rank
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    cout << "|                                Your Metro MaP                               |" << endl;
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    for (int i = start; i <= trans2; i++) // Display stations of second line (from start_stationto trans)
     {
-        if ((start <= trans1) && (end >= trans2)) // start before trans and end after trans
-        {
-            for (int i = start; i < trans1; i++) // Display stations of first line (from start to trans)
-            {
+        start_loop_even_cases(i, start, end_station, trans1, trans2, stations);
 
-                if (i == trans1 - 1)
-                {
-                    cout << "   | " << endl
-                         << "   V " << endl
-                         << arr[i - 1];
-                }
-                else if (i != start)
-                {
-                    cout << "   | " << endl
-                         << "   V " << endl
-                         << arr[i - 1] << endl;
-                }
-                else
-                {
-                    cout << endl
-                         << arr[start - 1] << endl;
-                }
-                zone_checker(stations, current_zone, i, zone_counter);
-            }
-
-            cout << "   =====> " << endl; // Arrow indicating transition between lines
-
-            for (int i = trans2; i <= end; i++) // Display stations of second line (from trans to end)
-            {
-                if (i == trans2)
-                {
-                    cout << arr[i - 1] << endl
-                         << "\t\t   |" << endl
-                         << "\t\t   V" << endl;
-                }
-                else if (i != end)
-                {
-                    cout << "\t\t" << arr[i - 1] << endl
-                         << "\t\t   |" << endl
-                         << "\t\t   V" << endl;
-                }
-                else
-                {
-                    cout << "\t\t" << arr[end - 1] << endl;
-                }
-                zone_checker(stations, current_zone, i, zone_counter);
-            }
-
-            cout << "Number of geographical zones = " << zone_counter << endl;
-        }
+        zone_checker(stations, current_zone, i, zone_counter);
     }
-    else if (start > end) // starting descendingly according to the line rank
+
+    for (int i = trans1; i >= end_station; i--) // Display stations of first line (from trans to end_station)
     {
-        if ((start <= trans2) && (end >= trans1)) // start before trans and end after trans
-        {
-            for (int i = start; i < trans2; i++) // Display stations of second line (from start to trans)
-            {
-                if (i != start)
-                {
-                    cout << "   | " << endl
-                         << "   V " << endl
-                         << arr[i - 1] << endl;
-                }
-                else
-                {
-                    cout << endl
-                         << arr[start - 1] << endl;
-                }
-                zone_checker(stations, current_zone, i, zone_counter);
-            }
 
-            cout << "   =====> "; // Arrow indicating transition between lines
+        end_loop(i, end_station, stations);
 
-            for (int i = trans1; i <= end; i++) // Display stations of first line (from trans to end)
-            {
-                if (i == trans2)
-                {
-                    cout << arr[i - 1] << endl
-                         << "\t\t   |" << endl
-                         << "\t\t   V" << endl;
-                }
-                else if (i != end)
-                {
-                    cout << "\t\t" << arr[i - 1] << endl
-                         << "\t\t   |" << endl
-                         << "\t\t   V" << endl;
-                }
-                else
-                {
-                    cout << "\t\t" << arr[end - 1] << endl;
-                }
-                zone_checker(stations, current_zone, i, zone_counter);
-            }
-
-            cout << "Number of geographical zones = " << zone_counter << endl;
-        }
+        zone_checker(stations, current_zone, i, zone_counter);
     }
+    if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
+        cout << endl
+             << "Number of geographical zones = " << zone_counter << endl;
 }
 
-void case3(int &start, int &end, int trans1, int trans2, int start_line, string arr[])
+void case3(int &start, int &end_station, int trans1, int trans2, string arr[]) // start_stationbefore trans and end after trans
 {
-    int current_zone = current_zone_check(stations[start - 1]);
+
+    int current_zone = current_zone_check(stations[start_station - 1]);
     int zone_counter = 1;
-    if (start < end) // starting ascendingly according to the line rank
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    cout << "|                                Your Metro MaP                               |" << endl;
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    for (int i = start; i <= trans1; i++) // Display stations of first line (from start_stationto trans)
     {
-        if ((start >= trans1) && (end <= trans2)) // start after trans and end before trans
-        {
-            for (int i = start; i > trans1; i--) // Display stations of first line (from start to trans)
-            {
-                if (i != start)
-                {
-                    cout << "   | " << endl
-                         << "   V " << endl
-                         << arr[i - 1] << endl;
-                }
-                else
-                {
-                    cout << endl
-                         << arr[start - 1] << endl;
-                }
-                zone_checker(stations, current_zone, i, zone_counter);
-            }
 
-            cout << "   =====> "; // Arrow indicating transition between lines
+        start_loop_odd_cases(i, start, end_station, trans1, trans2, stations);
 
-            for (int i = trans2; i >= end; i--) // Display stations of second line (from trans to end)
-            {
-                if (i == trans2)
-                {
-                    cout << arr[i - 1] << endl
-                         << "\t\t   |" << endl
-                         << "\t\t   V" << endl;
-                }
-                else if (i != end)
-                {
-                    cout << "\t\t" << arr[i - 1] << endl
-                         << "\t\t   |" << endl
-                         << "\t\t   V" << endl;
-                }
-                else
-                {
-                    cout << "\t\t" << arr[end - 1] << endl;
-                }
-                zone_checker(stations, current_zone, i, zone_counter);
-            }
-
-            cout << "Number of geographical zones = " << zone_counter << endl;
-        }
+        zone_checker(stations, current_zone, i, zone_counter);
     }
-    else if (start > end) // starting descendingly according to the line rank
+
+    for (int i = trans2; i <= end_station; i++) // Display stations of second line (from trans to end_station)
     {
-        if ((start >= trans2) && (end <= trans1)) // start after trans and end before trans
-        {
-            for (int i = start; i > trans2; i--) // Display stations of second line (from start to trans)
-            {
-                if (i != start)
-                {
-                    cout << "   | " << endl
-                         << "   V " << endl
-                         << arr[i - 1] << endl;
-                }
-                else
-                {
-                    cout << endl
-                         << arr[start - 1] << endl;
-                }
-                zone_checker(stations, current_zone, i, zone_counter);
-            }
 
-            cout << "   =====> "; // Arrow indicating transition between lines
+        end_loop(i, end_station, stations);
 
-            for (int i = trans1; i >= end; i--) // Display stations of first line (from trans to end)
-            {
-                if (i == trans1)
-                {
-                    cout << arr[i - 1] << endl
-                         << "\t\t   |" << endl
-                         << "\t\t   V" << endl;
-                }
-                else if (i != end)
-                {
-                    cout << "\t\t" << arr[i - 1] << endl
-                         << "\t\t   |" << endl
-                         << "\t\t   V" << endl;
-                }
-                else
-                {
-                    cout << "\t\t" << arr[end - 1] << endl;
-                }
-                zone_checker(stations, current_zone, i, zone_counter);
-            }
-
-            cout << "Number of geographical zones = " << zone_counter << endl;
-        }
+        zone_checker(stations, current_zone, i, zone_counter);
     }
+    if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
+        cout << endl
+             << "Number of geographical zones = " << zone_counter << endl;
 }
 
-void case4(int &start, int &end, int trans1, int trans2, int start_line, string arr[])
+void case4(int &start, int &end_station, int trans1, int trans2, string arr[]) // start_stationbefore trans and end after trans
 {
-    int current_zone = current_zone_check(stations[start - 1]);
+    int current_zone = current_zone_check(stations[start_station - 1]);
     int zone_counter = 1;
-    if (start < end) // starting ascendingly according to the line rank
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    cout << "|                                Your Metro MaP                               |" << endl;
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    for (int i = start; i <= trans2; i++) // Display stations of second line (from start_stationto trans)
     {
-        if ((start >= trans1) && (end >= trans2)) // start after trans and end after trans
-        {
+        start_loop_even_cases(i, start, end_station, trans1, trans2, stations);
 
-            for (int i = start; i > trans1; i--) // Display stations of first line (from start to trans)
-            {
-                if (i != start)
-                {
-                    cout << "   | " << endl
-                         << "   V " << endl
-                         << arr[i - 1] << endl;
-                }
-                else
-                {
-                    cout << endl
-                         << arr[start - 1] << endl;
-                }
-                zone_checker(stations, current_zone, i, zone_counter);
-            }
-
-            cout << "   =====> " << endl; // Arrow indicating transition between lines
-
-            for (int i = trans2; i <= end; i++) // Display stations of second line (from trans to end)
-            {
-                if (i == trans2)
-                {
-                    cout << arr[i - 1] << endl
-                         << "\t\t   |" << endl
-                         << "\t\t   V" << endl;
-                }
-                else if (i != end)
-                {
-                    cout << "\t\t" << arr[i - 1] << endl
-                         << "\t\t   |" << endl
-                         << "\t\t   V" << endl;
-                }
-                else
-                {
-                    cout << "\t\t" << arr[end - 1] << endl;
-                }
-                zone_checker(stations, current_zone, i, zone_counter);
-            }
-
-            cout << "Number of geographical zones = " << zone_counter << endl;
-        }
+        zone_checker(stations, current_zone, i, zone_counter);
     }
-    else if (start > end) // starting descendingly according to the line rank
+
+    for (int i = trans1; i <= end_station; i++) // Display stations of first line (from trans to end_station)
     {
-        if ((start >= trans2) && (end >= trans1)) // start after trans and end after trans
-        {
+        end_loop(i, end_station, stations);
 
-            for (int i = start; i > trans2; i--) // Display stations of second line (from start to trans)
-            {
-                if (i != start)
-                {
-                    cout << "   | " << endl
-                         << "   V " << endl
-                         << arr[i - 1] << endl;
-                }
-                else
-                {
-                    cout << endl
-                         << arr[start - 1] << endl;
-                }
-                zone_checker(stations, current_zone, i, zone_counter);
-            }
-
-            cout << "   =====> "; // Arrow indicating transition between lines
-
-            for (int i = trans1; i <= end; i++) // Display stations of first line (from trans to end)
-            {
-                if (i == trans1)
-                {
-                    cout << arr[i - 1] << endl
-                         << "\t\t   |" << endl
-                         << "\t\t   V" << endl;
-                }
-                else if (i != end)
-                {
-                    cout << "\t\t" << arr[i - 1] << endl
-                         << "\t\t   |" << endl
-                         << "\t\t   V" << endl;
-                }
-                else
-                {
-                    cout << "\t\t" << arr[end - 1] << endl;
-                }
-                zone_checker(stations, current_zone, i, zone_counter);
-            }
-
-            cout << "Number of geographical zones = " << zone_counter << endl;
-        }
+        zone_checker(stations, current_zone, i, zone_counter);
     }
+    if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
+        cout << endl
+             << "Number of geographical zones = " << zone_counter << endl;
 }
 
-void counting_Rod_to_Cairo(int &end, int &start)
+void case5(int &start, int &end_station, int trans1, int trans2, string arr[])
 {
-    int kit_kat_num = 78;
-    cout << ((start - kit_kat_num) + (end - (kit_kat_num + 5))) << endl; // The Result
+    int current_zone = current_zone_check(stations[start_station - 1]);
+    int zone_counter = 1;
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    cout << "|                                Your Metro MaP                               |" << endl;
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    for (int i = start; i >= trans1; i--) // Display stations of first line (from start_stationto trans)
+    {
+        start_loop_odd_cases(i, start, end_station, trans1, trans2, stations);
+        zone_checker(stations, current_zone, i, zone_counter);
+    }
+
+    for (int i = trans2; i >= end_station; i--) // Display stations of second line (from trans to end_station)
+    {
+
+        end_loop(i, end_station, stations);
+
+        zone_checker(stations, current_zone, i, zone_counter);
+    }
+    if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
+        cout << endl
+             << "Number of geographical zones = " << zone_counter << endl;
 }
 
-void counting_Cairo_to_Rod(int &end, int &start)
+void case6(int &start, int &end_station, int trans1, int trans2, string arr[])
 {
-    int kit_kat_num = 78;
-    cout << ((end - kit_kat_num) + (start - (kit_kat_num + 5))) << endl; // The Result
+    int current_zone = current_zone_check(stations[start_station - 1]);
+    int zone_counter = 1;
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    cout << "|                                Your Metro MaP                               |" << endl;
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    for (int i = start; i >= trans2; i--) // Display stations of second line (from start_stationto trans)
+    {
+        start_loop_even_cases(i, start, end_station, trans1, trans2, stations);
+
+        zone_checker(stations, current_zone, i, zone_counter);
+    }
+
+    for (int i = trans1; i >= end_station; i--) // Display stations of first line (from trans to end_station)
+    {
+
+        end_loop(i, end_station, stations);
+
+        zone_checker(stations, current_zone, i, zone_counter);
+    }
+    if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
+        cout << endl
+             << "Number of geographical zones = " << zone_counter << endl;
 }
 
-void Rod_to_Cairo_list(int &end, int &start)
+void case7(int &start, int &end_station, int trans1, int trans2, string arr[])
+{
+    int current_zone = current_zone_check(stations[start_station - 1]);
+    int zone_counter = 1;
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    cout << "|                                Your Metro MaP                               |" << endl;
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+
+    for (int i = start; i >= trans1; i--) // Display stations of first line (from start_stationto trans)
+    {
+        start_loop_odd_cases(i, start, end_station, trans1, trans2, stations);
+        zone_checker(stations, current_zone, i, zone_counter);
+    }
+
+    for (int i = trans2; i <= end_station; i++) // Display stations of second line (from trans to end_station)
+    {
+
+        end_loop(i, end_station, stations);
+
+        zone_checker(stations, current_zone, i, zone_counter);
+    }
+    if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
+        cout << endl
+             << "Number of geographical zones = " << zone_counter << endl;
+}
+
+void case8(int &start, int &end_station, int trans1, int trans2, string arr[])
+{
+    int current_zone = current_zone_check(stations[start_station - 1]);
+    int zone_counter = 1;
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    cout << "|                                Your Metro MaP                               |" << endl;
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    for (int i = start; i >= trans2; i--) // Display stations of second line (from start_stationto trans)
+    {
+        start_loop_even_cases(i, start, end_station, trans1, trans2, stations);
+
+        zone_checker(stations, current_zone, i, zone_counter);
+    }
+
+    for (int i = trans1; i <= end_station; i++) // Display stations of first line (from trans to end_station)
+    {
+        end_loop(i, end_station, stations);
+
+        zone_checker(stations, current_zone, i, zone_counter);
+    }
+    if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
+        cout << endl
+             << "Number of geographical zones = " << zone_counter << endl;
+}
+
+int counting_Rod_to_Cairo(int &end_station, int &start)
+{
+
+    int result = ((start_station - kit_kat_1_station) + (end_station - (kit_kat_1_station + 5)));
+    return result;
+}
+
+int counting_Cairo_to_Rod(int &end_station, int &start)
+{
+
+    int result = ((end_station - kit_kat_1_station) + (start_station - (kit_kat_1_station + 5)));
+
+    return result;
+}
+
+void Rod_to_Cairo_list(int &end_station, int &start, int answer)
 {
     string Rod_stations[7] = {"Kit-Kat", "Sudan", "Imbaba", "El-Bohy", "Al-Qawmeya Al-Arabiya", "Ring Road", "Rod al-Farag Axis"};
-    string Cairo_stations[7] = {"El-Tawfikeya", "Wadi El-Nil", "Gamaat El Dowal Al-Arabiya", "Bulaq El-Dakroor", "Cairo University"};
-    int kit_kat_num1 = 78;
-    int kit_kat_num2 = 85;
+    string Cairo_stations[5] = {"El-Tawfikeya", "Wadi El-Nil", "Gamaat El Dowal Al-Arabiya", "Bulaq El-Dakroor", "Cairo University"};
 
-    cout << Rod_stations[0] << endl; // First station
-    for (int i = 1; i <= start - kit_kat_num1; i++)
+    int zone_counter = 1;
+    int selected_zone = (station_to_zone(counting_Rod_to_Cairo(end_station, start)));
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    cout << "|                                Your Metro MaP                               |" << endl;
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    cout << "\t\t\t\t     " << Rod_stations[start_station - kit_kat_1_station] << endl; // First station
+
+    for (int i = (start_station - 1 - kit_kat_1_station); i >= 0; i--)
     {
-        cout << "   | " << endl
-             << "   V " << endl
-             << Rod_stations[i] << endl;
+        cout << "\t\t\t\t\t| " << endl
+             << "\t\t\t\t\tV " << endl
+             << "\t\t\t\t     " << Rod_stations[i] << endl;
     }
 
-    cout << "   =====> " << endl; // Arrow indicating transition between branches
-
-    cout << Cairo_stations[0] << endl;
-    for (int i = 1; i <= end - kit_kat_num2; i++)
+    cout << "\t\t\t\t\t| " << endl
+         << "\t\t\t\t\tV " << endl;
+    cout << "\t\t\t\t     " << Cairo_stations[0] << endl;
+    for (int i = 1; i <= end_station - kit_kat_2_station; i++)
     {
-        cout << "   | " << endl
-             << "   V " << endl
-             << Cairo_stations[i] << endl;
+        cout << "\t\t\t\t\t| " << endl
+             << "\t\t\t\t\tV " << endl
+             << "\t\t\t\t     " << Cairo_stations[i] << endl;
     }
+    cout << "Number of selected stations = " << counting_Rod_to_Cairo(end_station, start) << endl;
+    if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
+        cout << endl
+             << "Number of geographical zones = " << zone_counter << endl;
+    check_out(answer, selected_zone);
 }
 
-void Cairo_to_Rod_list(int &end, int &start)
+void Cairo_to_Rod_list(int &end_station, int &start, int answer)
 {
     string Rod_stations[7] = {"Kit Kat ", "Sudan", "Imbaba ", "El-Bohy ", "Al-Qawmeya Al-Arabiya ", "Ring Road ", "Rod al-Farag Axis "};
-    string Cairo_stations[7] = {"El-Tawfikeya ", "Wadi El-Nil", "Gamaat El Dowal Al-Arabiya ", "Bulaq El-Dakroor ", "Cairo University"};
-    int kit_kat_num1 = 78;
-    int kit_kat_num2 = 85;
+    string Cairo_stations[5] = {"El-Tawfikeya ", "Wadi El-Nil", "Gamaat El Dowal Al-Arabiya ", "Bulaq El-Dakroor ", "Cairo University"};
 
-    cout << Cairo_stations[0] << endl; // First station
-    for (int i = 1; i <= start - kit_kat_num2; i++)
+    int zone_counter = 1;
+    int selected_zone = (station_to_zone(counting_Cairo_to_Rod(end_station, start)));
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    cout << "|                                Your Metro MaP                               |" << endl;
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    cout << "\t\t\t\t     " << Cairo_stations[start_station - kit_kat_2_station] << endl; // First station
+    for (int i = (start_station - 1 - kit_kat_2_station); i >= 0; i--)                    // ( -1 ==> to start_stationfrom second station )
     {
-        cout << "   | " << endl
-             << "   V " << endl
-             << Cairo_stations[i] << endl;
+        cout << "\t\t\t\t\t| " << endl
+             << "\t\t\t\t\tV " << endl
+             << "\t\t\t\t     " << Cairo_stations[i] << endl;
     }
-
-    cout << "   =====> " << endl; // Arrow indicating transition between branches
-
-    cout << Rod_stations[0] << endl;
-    for (int i = 1; i <= end - kit_kat_num1; i++)
+    cout << "\t\t\t\t\t| " << endl
+         << "\t\t\t\t\tV" << endl;
+    cout << "\t\t\t\t     " << Rod_stations[0] << endl;
+    for (int i = 1; i <= end_station - kit_kat_1_station; i++)
     {
-        cout << "   | " << endl
-             << "   V " << endl
-             << Rod_stations[i] << endl;
+        cout << "\t\t\t\t\t| " << endl
+             << "\t\t\t\t\tV " << endl
+             << "\t\t\t\t     " << Rod_stations[i] << endl;
+    }
+    cout << "Number of selected stations = " << counting_Cairo_to_Rod(end_station, start) << endl;
+    if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
+        cout << endl
+             << "Number of geographical zones = " << zone_counter << endl;
+    check_out(answer, selected_zone);
+}
+
+void cases(int &start, int &end_station, int trans1, int trans2, string arr[])
+{
+    if (start_station < end_station)
+    { // starting ascendingly
+        if ((start_station <= trans1) && (end_station <= trans2))
+        {
+            case1(start, end_station, trans1, trans2, arr);
+        }
+        else if ((start_station <= trans1) && (end_station >= trans2))
+        {
+            case3(start, end_station, trans1, trans2, arr);
+        }
+        else if ((start_station >= trans1) && (end_station <= trans2))
+        {
+            case5(start, end_station, trans1, trans2, arr);
+        }
+        else if ((start_station >= trans1) && (end_station >= trans2))
+        {
+            case7(start, end_station, trans1, trans2, arr);
+        }
+    }
+    else if (start_station > end_station)
+    { // starting descendingly
+        if ((start_station <= trans2) && (end_station <= trans1))
+        {
+            case2(start, end_station, trans1, trans2, arr);
+        }
+        else if ((start_station <= trans2) && (end_station >= trans1))
+        {
+            case4(start, end_station, trans1, trans2, arr);
+        }
+        else if ((start_station >= trans2) && (end_station <= trans1))
+        {
+            case6(start, end_station, trans1, trans2, arr);
+        }
+        else if ((start_station >= trans2) && (end_station >= trans1))
+        {
+            case8(start, end_station, trans1, trans2, arr);
+        }
     }
 }
 
-void cases(int &start, int &end, int trans1, int trans2, int start_line, string arr[])
+void list_intersect_line_1_2(int &start, int &end_station, string arr[], int trans1 = 14, int trans2 = 43)
 {
-    (case1(start, end, trans1, trans2, start_line, arr));
-    (case2(start, end, trans1, trans2, start_line, arr));
-    (case3(start, end, trans1, trans2, start_line, arr));
-    (case4(start, end, trans1, trans2, start_line, arr));
+    cases(start, end_station, trans1, trans2, arr);
 }
 
-void list_intersect_line_1_2(int &start, int &end, string arr[], int start_line, int trans1 = 14, int trans2 = 43)
+void list_intersect_line_2_3(int &start, int &end_station, string arr[], int trans2 = 44, int trans3 = 74)
 {
-    cases(start, end, trans1, trans2, start_line, arr);
+    cases(start, end_station, trans2, trans3, arr);
 }
 
-void list_intersect_line_2_3(int &start, int &end, string arr[], int start_line, int trans2 = 44, int trans3 = 74)
+void list_intersect_line_1_3(int &start, int &end_station, string arr[], int trans1 = 16, int trans3 = 75)
 {
-    cases(start, end, trans2, trans3, start_line, arr);
+    cases(start, end_station, trans1, trans3, arr);
 }
 
-void list_intersect_line_1_3(int &start, int &end, string arr[], int start_line, int trans1 = 16, int trans3 = 75)
+int counting_intersected_stations(int &start, int &end_station, int trans1, int trans2)
 {
-    cases(start, end, trans1, trans3, start_line, arr);
-}
-
-int counting_intersected_stations(int &start, int &end, int trans1, int trans2)
-{
-    if (start > end)
+    if (start_station > end_station)
     {
         trans2 -= start;
-        trans1 -= end;
+        trans1 -= end_station;
         trans1 = abs(trans1);
         trans2 = abs(trans2);
         return trans1 + trans2 + 1;
     }
-    else if (start < end)
+    else if (start_station < end_station)
     {
         trans1 -= start;
-        trans2 -= end;
+        trans2 -= end_station;
         trans1 = abs(trans1);
         trans2 = abs(trans2);
         return trans1 + trans2 + 1;
     }
-    else
-        return -1;
 }
 
 void input_start_data(int &start_line, int &start)
@@ -1991,8 +1977,9 @@ void input_start_data(int &start_line, int &start)
         {
             if (start_line > 0 && start_line < 4)
             {
-                cout << "Please choose start station" << endl;
-                start = choose_line(start_line, start);
+                cout << "Please choose start_stationstation" << endl;
+                start_station = choose_line(start_line, start);
+                cout << "+-----------------------------------------------------------------------------+" << endl;
                 ++ride_freq_entry[start];
                 break;
             }
@@ -2003,7 +1990,7 @@ void input_start_data(int &start_line, int &start)
     } while (true);
 }
 
-void input_end_data(int &end_line, int &end)
+void input_end_data(int &end_line, int &end_station)
 {
     do
     {
@@ -2025,8 +2012,9 @@ void input_end_data(int &end_line, int &end)
             if (end_line > 0 && end_line < 4)
             {
                 cout << "Please choose end station" << endl;
-                end = choose_line(end_line, end);
-                ++ride_freq_exit[end];
+                end_station = choose_line(end_line, end_station);
+                cout << "+-----------------------------------------------------------------------------+" << endl;
+                ++ride_freq_exit[end_station];
                 break;
             }
             else
@@ -2036,15 +2024,15 @@ void input_end_data(int &end_line, int &end)
     } while (true);
 }
 
-void if_intersection(int &start, int &end, int &start_line, int &end_line, string arr[], int &answer)
+void if_intersection(int &start, int &end_station, int &start_line, int &end_line, string arr[], int answer)
 {
 
     do
     {
-        if (arr[start - 1] == arr[end - 1])
+        if (arr[start_station - 1] == arr[end_station - 1])
         {
-            cout << "Please Enter a different end station or start station" << endl;
-            start_calc(start, end, end_line, start_line, answer);
+            cout << "Please Enter a different end station or start_stationstation" << endl;
+            start_calc(start, end_station, end_line, start_line, answer);
         }
         else
         {
@@ -2053,224 +2041,244 @@ void if_intersection(int &start, int &end, int &start_line, int &end_line, strin
 
     } while (true);
 
-    if ((start >= 1 && start <= line1) && (end >= 36 && end <= 55) || (start >= 36 && start <= 55) && (end >= 1 && end <= line1)) // line 1 and line 2
+    if ((start_station >= start_line1 && start_station <= end_line1) && (end_station >= start_line2 && end_station <= end_line2) || (start_station >= start_line2 && start_station <= end_line2) && (end_station >= start_line1 && end_station <= end_line1)) // line 1 and line 2
 
     {
-        int trans1 = 14, trans2 = 43, selected_stations = 0, selected_zone = 0;
-        if ((start >= 1 && start <= line1) || (start >= 36 && start <= 55)) // in case the start is in line 1 or line 2
+        int selected_stations = 0, selected_zone = 0;
+        if ((start_station >= start_line1 && start_station <= end_line1) || (start_station >= start_line2 && start_station <= end_line2))
         {
-            selected_stations = counting_intersected_stations(start, end, trans1, trans2);
+            selected_stations = counting_intersected_stations(start, end_station, Al_Shohadaa_line1, Al_Shohadaa_line2);
             selected_zone = ((station_to_zone(selected_stations))); // converting station to zone
             if (zone_to_zone_check(selected_zone))                  // comparing the converted zone with user zone
             {
-                cout << "Number of selected stations = " << selected_stations << endl;
-                list_intersect_line_1_2(start, end, stations, start_line); // lisiting stations of the trip
-                check_out(answer, selected_zone);                          // check out to deduct according to the user plantype
+                cout << "+-----------------------------------------------------------------------------+" << endl;
+                list_intersect_line_1_2(start, end_station, stations); // lisiting stations of the trip
+                cout << "Number of selected stations = " << selected_stations << endl
+                     << endl;
+                check_out(answer, selected_zone); // check out to deduct according to the user plantype
             }
 
             else
             {
-                trip_not_valid(start, end, end_line, start_line, answer);
+                trip_not_valid(start, end_station, end_line, start_line, answer);
             }
         }
     }
 
-    else if ((start >= 36 && start <= (line1 + line2)) && (end >= 56 && end <= 88) || (start >= 56 && start <= 88) && (end >= 36 && end <= (line1 + line2))) // line 2 and line 3
+    else if ((start_station >= start_line2 && start_station <= end_line2) && (end_station >= start_line3 && end_station <= end_line3) || (start_station >= start_line3 && start_station <= end_line3) && (end_station >= start_line2 && end_station <= end_line2)) // line 2 and line 3
     {
 
-        int trans1 = 44, trans2 = 74, selected_stations = 0, selected_zone = 0;
-        if ((start >= 56 && start <= 88) || (start >= 36 && start <= 55)) // in case the start is in line 3 or line 2
+        int selected_stations = 0, selected_zone = 0;
+        if ((start_station >= start_line3 && start_station <= end_line3) || (start_station >= start_line2 && start_station <= end_line2))
         {
-            selected_stations = counting_intersected_stations(start, end, trans1, trans2);
+            selected_stations = counting_intersected_stations(start, end_station, Attaba_line2, Attaba_line3);
             selected_zone = ((station_to_zone(selected_stations)));
             if (zone_to_zone_check(selected_zone))
             {
-                cout << "Number of selected stations = " << selected_stations << endl;
-                list_intersect_line_2_3(start, end, stations, start_line);
+                cout << "+-----------------------------------------------------------------------------+" << endl;
+                list_intersect_line_2_3(start, end_station, stations);
+                cout << "Number of selected stations = " << selected_stations << endl
+                     << endl;
                 check_out(answer, selected_zone);
             }
 
             else
             {
-                trip_not_valid(start, end, end_line, start_line, answer);
+                trip_not_valid(start, end_station, end_line, start_line, answer);
             }
         }
     }
 
-    else if ((start >= 1 && start <= line1) && (end >= 56 && end <= 88) || (start >= 56 && start <= 88) && (end >= 1 && end <= line1)) // line 1 and line 3
+    else if ((start_station >= start_line1 && start_station <= end_line1) && (end_station >= start_line3 && end_station <= end_line3) || (start_station >= start_line3 && start_station <= end_line3) && (end_station >= start_line1 && end_station <= end_line1)) // line 1 and line 3
     {
 
-        int trans1 = 16, trans2 = 75, selected_stations = 0, selected_zone = 0;
-        if ((start >= 1 && start <= line1) || ((start >= 56 && start <= 88))) // in case the start is in line 1 or line 3
+        int selected_stations = 0, selected_zone = 0;
+        if ((start_station >= start_line1 && start_station <= end_line1) || ((start_station >= start_line3 && start_station <= end_line3)))
         {
-            selected_stations = counting_intersected_stations(start, end, trans1, trans2);
-            selected_zone = ((station_to_zone(selected_stations)));
+            selected_stations = counting_intersected_stations(start, end_station, Nasser_line1, Nasser_line3);
+            selected_zone = (station_to_zone(selected_stations));
             if (zone_to_zone_check(selected_zone))
             {
-                cout << "Number of selected stations = " << selected_stations << endl;
-                list_intersect_line_1_3(start, end, stations, start_line);
+                cout << "+-----------------------------------------------------------------------------+" << endl;
+                list_intersect_line_1_3(start, end_station, stations);
+                cout << "Number of selected stations = " << selected_stations << endl
+                     << endl;
                 check_out(answer, selected_zone);
             }
 
             else
             {
-                trip_not_valid(start, end, end_line, start_line, answer);
+                trip_not_valid(start, end_station, end_line, start_line, answer);
             }
         }
     }
 }
 
-int kit_kat_check(int &end, int &start)
+int kit_kat_check(int &end_station, int &start)
 {
-    if (start <= 84 && end <= 84) // Rod- El Farag Branch
+    if (start_station <= Rod_axis_station && end_station <= Rod_axis_station) // to include Rod- El Farag Branch
         return 1;
-    else if (start > 84 && end > 84) // Cairo Branch Only
+    else if (start_station > Rod_axis_station && end_station > Rod_axis_station) // Cairo Branch Only
         return 2;
-    else if (((start > 78 && start < 84) && end > 84)) // start at Rod-El Farag and end at Cairo
+    else if (((start_station > kit_kat_1_station && start_station <= Rod_axis_station) && end_station > Rod_axis_station)) // start_stationat Rod-El Farag and end at Cairo
         return 5;
-    else if ((end > 78 && end < 84) && start > 84) // start at Cairo and end at Rod
+    else if ((end_station > kit_kat_1_station && end_station <= Rod_axis_station) && start_station > Rod_axis_station) // start_stationat Cairo and end at Rod
         return 6;
-    else if (start > 84) // start only at Cairo Branch
+    else if (start_station > Rod_axis_station) // start_stationonly at Cairo Branch
         return 3;
-    else if (end > 84) // end only at Cairo Branch
+    else if (end_station > Rod_axis_station) // end only at Cairo Branch
         return 4;
-    else
-        return -1; // Invalid case
 }
 
-void kitkat_branches(int &end, int &start)
+void kitkat_branches(int &end_station, int &start)
 {
-    if (kit_kat_check(end, start) == 1)
+    if (kit_kat_check(end_station, start) == 1)
     {
         string rod_El_farag_branch[] = {"Sudan", "Imbaba", "El-Bohy", "Al-Qawmeya Al-Arabiya", "Ring Road", "Rod al-Farag Axis"};
         for (int i = 0; i < 6; i++)
-            stations[78 + i] = rod_El_farag_branch[i];
+            stations[kit_kat_1_station + i] = rod_El_farag_branch[i];
     }
     else
     {
         string cairo_branch[] = {"El-Tawfikeya", "Wadi El-Nil", "Gamaat El Dowal Al-Arabiya", "Bulaq El-Dakroor", "Cairo University"};
         for (int i = 0; i < 5; i++)
-            stations[78 + i] = cairo_branch[i];
+            stations[kit_kat_1_station + i] = cairo_branch[i];
     }
 }
 
-void list_same_line(int &start, int &end, int start_line, string arr[], user_struct users[])
+void same_line_loop(int i, int start, string arr[])
 {
-    cout << endl;
-    int current_zone = current_zone_check(stations[start - 1]);
+    if (i != start)
+    {
+        cout << "\t\t\t\t\t| " << endl
+             << "\t\t\t\t\tV " << endl
+             << "\t\t\t\t     " << arr[i - 1] << endl;
+    }
+    else
+    {
+        cout << endl
+             << "\t\t\t\t     " << arr[start_station - 1] << endl;
+    }
+}
+
+void list_same_line(int &start, int &end_station, string arr[], user_struct arr_users[])
+{
+    int current_zone = current_zone_check(stations[start_station - 1]);
     int zone_counter = 1;
 
-    if (start > end)
+    if (start_station > end_station)
     {
 
-        for (int i = start; i >= end; i--)
+        for (int i = start; i >= end_station; i--)
         {
-
-            cout << "   | " << endl
-                 << "   V " << endl
-                 << arr[i - 1] << endl; // Using down arrow
-
+            same_line_loop(i, start, stations);
             zone_checker(stations, current_zone, i, zone_counter);
         }
-        cout << "Number of geographical zones = " << zone_counter << endl;
+        if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
+            cout << endl
+                 << "Number of geographical zones = " << zone_counter << endl;
     }
-    else if (start < end)
+    else if (start_station < end_station)
     {
-        for (int i = start; i <= end; i++)
+        for (int i = start; i <= end_station; i++)
         {
-
-            cout << "   | " << endl
-                 << "   V " << endl
-                 << arr[i - 1] << endl; // Using down arrow
+            same_line_loop(i, start, stations);
             zone_checker(stations, current_zone, i, zone_counter);
         }
-        cout << "Number of geographical zones = " << zone_counter << endl;
+        if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
+            cout << endl
+                 << "Number of geographical zones = " << zone_counter << endl;
     }
 }
 
-void if_same_line(int &start, int &end, int &end_line, int &start_line, int &answer)
+void if_same_line(int &start, int &end_station, int &end_line, int &start_line, int answer)
 {
 
-    if (end - start > 0)
+    if (end_station - start_station > 0)
     {
 
-        int selected_stations = end - start + 1;
+        int selected_stations = end_station - start_station + 1;
         int selected_zone = (station_to_zone(selected_stations));
         if (zone_to_zone_check(selected_zone))
         {
-            cout << "Number of selected stations = " << selected_stations << endl;
-            list_same_line(start, end, start_line, stations, users);
+            cout << "+-----------------------------------------------------------------------------+" << endl;
+            cout << "|                                Your Metro MaP                               |" << endl;
+            cout << "+-----------------------------------------------------------------------------+" << endl;
+            list_same_line(start, end_station, stations, users);
+            cout << "\nNumber of selected stations = " << selected_stations << endl;
             check_out(answer, selected_zone);
         }
         else
         {
 
-            trip_not_valid(start, end, end_line, start_line, answer);
+            trip_not_valid(start, end_station, end_line, start_line, answer);
         }
     }
 
-    else if (end - start < 0)
+    else if (end_station - start_station < 0)
     {
-        int selected_stations = start - end + 1;
+        int selected_stations = start_station - end_station + 1;
         int selected_zone = (station_to_zone(selected_stations));
         if (zone_to_zone_check(selected_zone))
         {
-            cout << "Number of selected stations = " << selected_stations << endl;
-            list_same_line(start, end, start_line, stations, users);
+            cout << "+-----------------------------------------------------------------------------+" << endl;
+            list_same_line(start, end_station, stations, users);
+            cout << "Number of selected stations = " << selected_stations << endl
+                 << endl;
             check_out(answer, selected_zone);
         }
         else
         {
-            trip_not_valid(start, end, end_line, start_line, answer);
+            trip_not_valid(start, end_station, end_line, start_line, answer);
         }
     }
 
     else
     {
-        cout << "Please enter a different end or start station" << endl;
-        start_calc(start, end, end_line, start_line, answer);
+        cout << endl
+             << "Please enter a different end or start_stationstation" << endl
+             << endl;
+        start_calc(start, end_station, end_line, start_line, answer);
     }
 }
 
-void check_line(int &start_line, int &end_line, int &end, int &start, string arr[], int &answer)
+void check_line(int &start_line, int &end_line, int &end_station, int &start, string arr[], int answer)
 {
     if (start_line == 3 || end_line == 3) // if line 3 is chosen
     {
-        kitkat_branches(end, start); // choosing the suitable branch
+        kitkat_branches(end_station, start); // choosing the suitable branch
 
-        if (kit_kat_check(end, start) == 5) // start at Rod-El Farag and end at Cairo
+        if (kit_kat_check(end_station, start) == 5) // start_stationat Rod-El Farag and end at Cairo
         {
-            counting_Rod_to_Cairo(end, start);
-            Rod_to_Cairo_list(end, start);
+            Rod_to_Cairo_list(end_station, start, answer);
         }
-        else if (kit_kat_check(end, start) == 6) //  start at Cairo and end at Rod-El Farag
+        else if (kit_kat_check(end_station, start) == 6) //  start_stationat Cairo and end at Rod-El Farag
         {
-            counting_Cairo_to_Rod(end, start);
-            Cairo_to_Rod_list(end, start);
+            Cairo_to_Rod_list(end_station, start, answer);
         }
-        else if (kit_kat_check(end, start) == 2) //  Cairo Branch only
+        else if (kit_kat_check(end_station, start) == 2) //  Cairo Branch only
         {
-            start -= 6;
-            end -= 6;
+            start_station -= stations_of_Rod_branch;
+            end_station -= stations_of_Rod_branch;
         }
-        else if (kit_kat_check(end, start) == 3) // start only at Cairo Branch
+        else if (kit_kat_check(end_station, start) == 3) // start_stationonly at Cairo Branch
         {
-            start -= 6;
+            start_station -= stations_of_Rod_branch;
         }
-        else if (kit_kat_check(end, start) == 4) // end only at Cairo Branch
+        else if (kit_kat_check(end_station, start) == 4) // end only at Cairo Branch
         {
-            end -= 6;
+            end_station -= stations_of_Rod_branch;
         }
     }
-    if (kit_kat_check(end, start) != 6 && kit_kat_check(end, start) != 5)
+    if (kit_kat_check(end_station, start) != 6 && kit_kat_check(end_station, start) != 5)
     {
         if (start_line == end_line) // if same line
         {
-            if_same_line(start, end, end_line, start_line, answer);
+            if_same_line(start, end_station, end_line, start_line, answer);
         }
         else
         {
-            if_intersection(start, end, start_line, end_line, arr, answer); // if different lines
+            if_intersection(start, end_station, start_line, end_line, arr, answer); // if different lines
         }
     }
 }
@@ -2279,6 +2287,7 @@ int choose_line(int line_num, int station_num)
 {
     if (line_num == 1)
     {
+
         cout << "+-----------------------------------------------------------------------------+" << endl;
         cout << "|                                 Line 1 Stations                             |" << endl;
         cout << "+-----------------------------------------------------------------------------+" << endl;
@@ -2299,7 +2308,6 @@ int choose_line(int line_num, int station_num)
         do
         {
             cin >> station_num;
-            int start = station_num;
             if (cin.fail())
             {
                 cin.clear();
@@ -2312,7 +2320,7 @@ int choose_line(int line_num, int station_num)
             }
             else
             {
-                if (station_num >= 1 && station_num <= line1)
+                if (station_num >= start_line1 && station_num <= end_line1)
                 {
                     break;
                 }
@@ -2343,14 +2351,15 @@ int choose_line(int line_num, int station_num)
                 cin.clear();
 
                 // leave the rest of the line
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cin.ignore(numeric_limits<streamsize>::max(),
+                           '\n');
 
                 // Ask the user to enter a valid int number only
                 cout << "Wrong input,Please enter a number" << endl;
             }
             else
             {
-                if (station_num > line1 && station_num <= line1 + line2)
+                if (station_num >= start_line2 && station_num <= end_line2)
                 {
                     break;
                 }
@@ -2394,7 +2403,7 @@ int choose_line(int line_num, int station_num)
             }
             else
             {
-                if (station_num > line1 + line2 && station_num <= 89)
+                if (station_num >= start_line3 && station_num <= end_line3)
                 {
                     break;
                 }
@@ -2423,45 +2432,49 @@ void enter_endline()
          << "3. Line 3" << endl;
 }
 
-void start_calc(int &start, int &end, int &end_line, int &start_line, int answer)
+void start_calc(int &start, int &end_station, int &end_line, int &start_line, int answer)
 {
     do
     {
         input_start_data(start_line, start);
-        input_end_data(end_line, end);
+        input_end_data(end_line, end_station);
         do
         {
-            cout << "Click 1 to confirm your ride or 2 to restart" << endl;
+
+            cout << "Enter 1 to confirm your ride or 2 to restart" << endl;
             cin >> answer;
             if (cin.fail())
             {
                 cin.clear();
 
                 // leave the rest of the line
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cin.ignore(numeric_limits<streamsize>::max(),
+                           '\n');
 
                 // Ask the user to enter a valid int number only
-                cout << "Wrong input,";
+                cout << "+-----------------------------------------------------------------------------+" << endl;
+                cout << "Wrong input" << endl;
             }
             else
             {
                 if (answer == 1)
                 {
-                    check_line(start_line, end_line, end, start, stations, answer);
+                    check_line(start_line, end_line, end_station, start, stations, answer);
                     break;
                 }
                 else if (answer == 2)
                 {
-                    --ride_freq_entry[start];
-                    --ride_freq_exit[end];
                     break;
                 }
                 else
+                {
+                    cout << "+-----------------------------------------------------------------------------+" << endl;
                     cout << "Enter a valid number" << endl;
+                }
             }
 
         } while (true);
-
+        answer = 2; // remove
     } while (answer == 2);
 }
 
@@ -2531,7 +2544,7 @@ int current_zone_check(string stations)
                 return 10;
             }
         }
-        for (int i = 0; i < 14; i++)
+        for (int i = 0; i < 13; i++)
         {
             if (stations == zone_11[i]) // checking if current zone = zone 11
             {
@@ -2546,17 +2559,20 @@ int current_zone_check(string stations)
             }
         }
     }
+    return 0;
 }
 
 void zone_checker(string stations[], int &current_zone, int i, int &zone_counter)
 {
 
     int new_current_zone = current_zone_check(stations[i - 1]);
-    if (new_current_zone != current_zone)
+    if (new_current_zone != current_zone && new_current_zone != 0)
     {
         current_zone = new_current_zone;
         zone_counter++;
     }
+    else
+        current_zone = new_current_zone;
 }
 
 int station_to_zone(int numberofstations)
@@ -2575,10 +2591,9 @@ int station_to_zone(int numberofstations)
     }
     else if (numberofstations > 23)
     {
+
         return 4;
     }
-    else
-        return -1; // Invalid case
 }
 
 int string_to_int_zone() // we need integers in calculation
@@ -2623,8 +2638,33 @@ void trips_deduction_general_or_scholar()
     if (users[global_id].subscribiondetails.remainingTrips > 0)
     {
         --users[global_id].subscribiondetails.remainingTrips;
+        cout << "+-----------------------------------------------------------------------------+" << endl;
         cout << "Your trip is sucessfully booked" << endl
              << "Remaining trips = " << users[global_id].subscribiondetails.remainingTrips << endl;
+        cout << "+-----------------------------------------------------------------------------+" << endl;
+    }
+    else if (users[global_id].balance < users[global_id].subscribiondetails.payment)
+    {
+        do
+        {
+            cout << "+-----------------------------------------------------------------------------+" << endl;
+            cout << "You have no more trips" << endl
+                 << "Please top up your balance and renew subscription" << endl
+                 << "Enter 1 to top up your balance" << endl
+                 << "Enter 2 return to main menu" << endl;
+            if (answer == 1)
+            {
+            }
+            cout << "+-----------------------------------------------------------------------------+" << endl;
+
+        } while (true);
+    }
+    else
+    {
+        cout << "+-----------------------------------------------------------------------------+" << endl;
+        cout << "You have no more trips" << endl
+             << "Please renew your subscription" << endl;
+        cout << "+-----------------------------------------------------------------------------+" << endl;
     }
 }
 
@@ -2649,48 +2689,97 @@ void wallet_dedcution(int selected_zone)
     }
 }
 
-void check_out(int &answer, int selected_zone)
+void check_out(int answer, int selected_zone)
 {
-    cout << "Enter 1 to checkout" << endl;
-    cout << "Enter 2 to cancel" << endl;
-    cin >> answer;
-    if (answer == 1)
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    do
     {
-        if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
+
+        cout << "Enter 1 to checkout" << endl;
+        cout << "Enter 2 to cancel" << endl;
+        cin >> answer;
+
+        if (answer == 1 || answer == 2)
         {
-            trips_deduction_general_or_scholar();
+            if (answer == 1)
+            {
+                if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
+                {
+                    trips_deduction_general_or_scholar();
+                }
+                else if (users[global_id].subscribiondetails.planType == 'W')
+                {
+                    wallet_dedcution(selected_zone);
+                }
+
+                user_main_menu();
+            }
+            else if (answer == 2)
+            {
+                --ride_freq_entry[start_station];
+                --ride_freq_entry[end_station];
+                user_main_menu();
+            }
+
+            break;
         }
-        else if (users[global_id].subscribiondetails.planType == 'W')
+        else if (cin.fail())
         {
-            wallet_dedcution(selected_zone);
+            cin.clear();
+
+            // leave the rest of the line
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            // Ask the user to enter a valid int number only
+            cout << "+-----------------------------------------------------------------------------+" << endl;
+            cout << "Wrong input,Please enter a number" << endl;
         }
-    }
-    else if (answer == 2)
-    {
-        cout << " Please Add a function here to return to main menu (This is only a version of ride codes)" << endl;
-    }
+        else
+        {
+            cout << "+-----------------------------------------------------------------------------+" << endl;
+            cout << "Please Enter a vaild choice" << endl;
+        }
+    } while (true);
 }
 
-void trip_not_valid(int start, int end, int end_line, int start_line, int &answer)
+void trip_not_valid(int start, int end_station, int end_line, int start_line, int answer)
 {
-    cout << "Number of stations does not match your zone!" << endl;
-    cout << "Click 2 to setup a new trip" << endl;
-    cout << "Click 3 to return back to menu" << endl;
-    cin >> answer;
-    if (answer == 3)
+    do
     {
-        menu();
-    }
-    else if (answer == 2)
-        start_calc(start, end, end_line, start_line, answer);
+        cout << "Number of stations does not match your zone!" << endl;
+        cout << "Enter 1 to setup a new trip" << endl;
+        cout << "Enter 2 to return back to menu" << endl;
+        cin >> answer;
+        if (cin.fail())
+        {
+            cin.clear();
+
+            // leave the rest of the line
+            cin.ignore(numeric_limits<streamsize>::max(),
+                       '\n');
+
+            // Ask the user to enter a valid int number only
+            cout << "Wrong input,";
+        }
+        else
+        {
+            if (answer == 1)
+            {
+                start_calc(start, end_station, end_line, start_line, answer);
+                break;
+            }
+            else if (answer == 2)
+                cout << "add main menu here" << endl; // Gaber main menu function
+        }
+
+    } while (true);
 }
 
 void system_ride()
 {
-    int start = 0, end = 0, count = 0;
-    int start_line = 0, end_line = 0, answer = 0;
+
     // initialize_users();
-    start_calc(start, end, end_line, start_line, answer);
+    start_calc(start_station, end_station, end_line, start_line, answer);
 }
 
 #pragma endregion
@@ -2797,29 +2886,7 @@ int main()
     read_statistics();
 
     cout << "Welcome to Cairo metro app \n";
-
-    while (true)
-    {
-        while (true)
-        {
-            temp_register_or_login = register_or_login();
-            if (temp_register_or_login == 1 || temp_register_or_login == 2)
-                break;
-        }
-
-        if (temp_register_or_login == 1)
-            register_form();
-
-        else
-        {
-            cout << "You have choose to login\n";
-
-            login_form();
-        }
-
-        if (exit_or_not() == 'Y')
-            break;
-    }
+    start_menu();
     storage_the_data_of_user_and_admin();
     storage_the_data_of_statistics();
     system("pause");
