@@ -14,6 +14,7 @@ using namespace std;
 
 #pragma endregion
 
+#pragma region Global variables, Arrays & Structs
 int kit_kat_1_station = 78; // Kit Kat to Rod El Farag
 int kit_kat_2_station = 85; // Kit Kat to Cairo University
 int Rod_axis_station = 84;
@@ -33,9 +34,7 @@ int stations_of_Rod_branch = 6;
 int line1_size = 35, line2_size = 20, line3_size = 23;
 int number_of_stations = 85;
 
-#pragma region Global variables, Arrays & Structs
-
-void initializeLocalTime(tm& localTime, time_t& now)
+void initializeLocalTime(tm &localTime, time_t &now)
 {
     now = time(0);
     if (localtime_s(&localTime, &now) != 0)
@@ -77,19 +76,19 @@ string stations[1000] = {
     "Opera", "Dokki", "El Bohoth", "Cairo University", "Faisal", "Giza", "Omm El-Masryeen", "Sakiat Mekky",
     "El Monib", "Adly Mansour", "Haykestep", "Omar Ibn El Khattab", "Qubaa", "Hesham Barakat", "El-Nozha",
     "El-Shams Club", "Alf Maskan", "Heliopolis", "Haroun", "Al-Ahram", "Koleyet El-Banat", "Stadium", "Fair Zone",
-    "Abbassiya", "Abdou Pasha", "El-Geish", "Bab El Shaariya", "Attaba", "Nasser", "Maspero", "Safaa Hijazy", "Kit-Kat" };
+    "Abbassiya", "Abdou Pasha", "El-Geish", "Bab El Shaariya", "Attaba", "Nasser", "Maspero", "Safaa Hijazy", "Kit-Kat"};
 
-string zone_1[8] = { "Al-Shohadaa", "Attaba", "Mohamed Naguib", "Sadat", "Opera", "Nasser", "Saad Zaghloul", "Orabi" };
-string zone_2[5] = { "Al-Sayeda Zeinab", "El-Malek El-Saleh", "Mar Girgis", "El-Zahraa", "Dar El-Salam" };
-string zone_3[8] = { "El Monib", "Sakiat Mekky", "Omm El-Masryeen", "Giza", "Faisal", "Cairo University", "El Bohoth", "Dokki" };
-string zone_4[8] = { "Al-Ahram", "Koleyet El-Banat", "Stadium", "Fair Zone", "Abbassiya", "Abdou Pasha", "El-Geish", "Bab El Shaariya" };
-string zone_5[6] = { "Saray El-Qobba", "Hammamat El-Qobba", "Kobri El-Qobba", "Manshiet El-Sadr", "El-Demerdash", "Ghamra" };
-string zone_6[8] = { "Shubra El-Khaimah", "Koliet El-Zeraa", "Mezallat", "Khalafawy", "St. Teresa", "Rod El-Farag", "Masarra" };
-string zone_7[6] = { "Hadayek El-Maadi", "Maadi", "Sakanat El-Maadi", "Tora El-Balad", "Kozzika", "Tura El-Esmant" };
-string zone_8[7] = { "New Marg", "El-Marg", "Ezbet El-Nakhl", "Ain Shams", "El-Matareyya", "Helmeyet El-Zaitoun", "Hadayeq El-Zaitoun" };
-string zone_9[6] = { "Elmaasara", "Hadayek Helwan", "Wadi Hof", "Helwan University", "Ain Helwan", "Helwan" };
-string zone_10[10] = { "Adly Mansour", "Haykestep", "Omar Ibn El Khattab", "Qubaa", "Hesham Barakat", "El-Nozha", "El-Shams Club", "Alf Maskan", "Heliopolis", "Haroun" };
-string zone_11[14] = { "Maspero", "Safaa Hijazy", "Kit-Kat", "Sudan", "Imbaba", "El-Bohy", "Al-Qawmeya Al-Arabiya", "Ring Road", "Rod al-Farag Axis", "El-Tawfikeya", "Wadi El-Nil", "Gamaat El Dowal Al-Arabiya", "Bulaq El-Dakroor", "Cairo University" };
+string zone_1[8] = {"Al-Shohadaa", "Attaba", "Mohamed Naguib", "Sadat", "Opera", "Nasser", "Saad Zaghloul", "Orabi"};
+string zone_2[5] = {"Al-Sayeda Zeinab", "El-Malek El-Saleh", "Mar Girgis", "El-Zahraa", "Dar El-Salam"};
+string zone_3[8] = {"El Monib", "Sakiat Mekky", "Omm El-Masryeen", "Giza", "Faisal", "Cairo University", "El Bohoth", "Dokki"};
+string zone_4[8] = {"Al-Ahram", "Koleyet El-Banat", "Stadium", "Fair Zone", "Abbassiya", "Abdou Pasha", "El-Geish", "Bab El Shaariya"};
+string zone_5[6] = {"Saray El-Qobba", "Hammamat El-Qobba", "Kobri El-Qobba", "Manshiet El-Sadr", "El-Demerdash", "Ghamra"};
+string zone_6[8] = {"Shubra El-Khaimah", "Koliet El-Zeraa", "Mezallat", "Khalafawy", "St. Teresa", "Rod El-Farag", "Masarra"};
+string zone_7[6] = {"Hadayek El-Maadi", "Maadi", "Sakanat El-Maadi", "Tora El-Balad", "Kozzika", "Tura El-Esmant"};
+string zone_8[7] = {"New Marg", "El-Marg", "Ezbet El-Nakhl", "Ain Shams", "El-Matareyya", "Helmeyet El-Zaitoun", "Hadayeq El-Zaitoun"};
+string zone_9[6] = {"Elmaasara", "Hadayek Helwan", "Wadi Hof", "Helwan University", "Ain Helwan", "Helwan"};
+string zone_10[10] = {"Adly Mansour", "Haykestep", "Omar Ibn El Khattab", "Qubaa", "Hesham Barakat", "El-Nozha", "El-Shams Club", "Alf Maskan", "Heliopolis", "Haroun"};
+string zone_11[14] = {"Maspero", "Safaa Hijazy", "Kit-Kat", "Sudan", "Imbaba", "El-Bohy", "Al-Qawmeya Al-Arabiya", "Ring Road", "Rod al-Farag Axis", "El-Tawfikeya", "Wadi El-Nil", "Gamaat El Dowal Al-Arabiya", "Bulaq El-Dakroor", "Cairo University"};
 
 // Struct Definitions
 struct date
@@ -170,11 +169,11 @@ struct Ride_history
 
 struct subscription_prices
 {
-    int scholer[4] = { 150, 200, 250, 300 };
+    int scholer[4] = {150, 200, 250, 300};
     int new_scholer[4];
-    int oneMonth_general[4] = { 310, 365, 425, 600 };
+    int oneMonth_general[4] = {310, 365, 425, 600};
     int new_oneMonth_general[4];
-    int oneYear_general[4] = { 3500, 4000, 4500, 5000 };
+    int oneYear_general[4] = {3500, 4000, 4500, 5000};
     int new_oneYear_general[4];
 } subs_prices;
 
@@ -182,11 +181,11 @@ struct subscription_prices
 
 #pragma region function decleared
 // Utility Functions
-void initializeLocalTime(tm& localTime, time_t& now);
+void initializeLocalTime(tm &localTime, time_t &now);
 
 // Sign-in, Registration & Admin Capabilities
 bool check_name_has_int(string name);
-string hidding_password_write(string& password);
+string hidding_password_write(string &password);
 string strong_pass();
 bool check_if_id_unique(int id);
 void Base_regiseter_to_user_or_admin();
@@ -204,7 +203,7 @@ char exit_or_not();
 
 // Subscriptions
 void user_data_entry();
-void zoneselection(int& numberofstations);
+void zoneselection(int &numberofstations);
 void subscriptiondataentry(int num);
 void calculating_payment_and_expirydate();
 void deductSubscriptionPayment();
@@ -225,39 +224,39 @@ void changing_prices_for_zones_for_zones_for_zones_for_zones_for_zones();
 void enter_endline();
 void enter_startline();
 void enter_endline();
-int choose_line(int& line_num, int& station_num);
-void input_start_data(int& start_line, int& start);
-void input_end_data(int& end_line, int& end_station);
-void start_loop_odd_cases(int i, int& start, int& end_station, int trans1, int trans2, string arr[]);
-void start_loop_even_cases(int i, int& start, int& end_station, int trans1, int trans2, string arr[]);
+int choose_line(int &line_num, int &station_num);
+void input_start_data(int &start_line, int &start);
+void input_end_data(int &end_line, int &end_station);
+void start_loop_odd_cases(int i, int &start, int &end_station, int trans1, int trans2, string arr[]);
+void start_loop_even_cases(int i, int &start, int &end_station, int trans1, int trans2, string arr[]);
 void end_loop(int i, int end_station, string arr[]);
 void same_line_loop(int i, int start, string arr[]);
-void case1(int& start, int& end_station, int trans1, int trans2, string arr[]);
-void case2(int& start, int& end_station, int trans1, int trans2, string arr[]);
-void case3(int& start, int& end_station, int trans1, int trans2, string arr[]);
-void case4(int& start, int& end_station, int trans1, int trans2, string arr[]);
-void case5(int& start, int& end_station, int trans1, int trans2, string arr[]);
-void case6(int& start, int& end_station, int trans1, int trans2, string arr[]);
-void case7(int& start, int& end_station, int trans1, int trans2, string arr[]);
-void case8(int& start, int& end_station, int trans1, int trans2, string arr[]);
-void cases(int& start, int& end_station, int trans1, int trans2, string arr[]);
-void list_intersect_line_1_2(int& start, int& end_station, string arr[], int trans1, int trans2);
-void list_intersect_line_2_3(int& start, int& end_station, string arr[], int trans2, int trans3);
-void list_intersect_line_1_3(int& start, int& end_station, string arr[], int trans1, int trans3);
-int counting_intersected_stations(int& start, int& end_station, int trans1, int trans2);
-void if_intersection(int& start, int& end_station, int& start_line, int& end_line, string arr[], int answer);
-int kit_kat_check(int& end_station, int& start);
-void kitkat_branches(int& end_station, int& start);
-void list_same_line(int& start, int& end_station, string arr[], user_struct arr_users[]);
-void if_same_line(int& start, int& end_station, int& end_line, int& start_line, int answer);
-void check_line(int& start_line, int& end_line, int& end_station, int& start, string arr[], int answer);
-int counting_Rod_to_Cairo(int& end_station, int& start);
-int counting_Cairo_to_Rod(int& end_station, int& start);
-void Rod_to_Cairo_list(int& end_station, int& start, int answer);
-void Cairo_to_Rod_list(int& end_station, int& start, int answer);
-void start_calc(int& start, int& end_station, int& end_line, int& start_line, int answer);
+void case1(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case2(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case3(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case4(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case5(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case6(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case7(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void case8(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void cases(int &start, int &end_station, int trans1, int trans2, string arr[]);
+void list_intersect_line_1_2(int &start, int &end_station, string arr[], int trans1, int trans2);
+void list_intersect_line_2_3(int &start, int &end_station, string arr[], int trans2, int trans3);
+void list_intersect_line_1_3(int &start, int &end_station, string arr[], int trans1, int trans3);
+int counting_intersected_stations(int &start, int &end_station, int trans1, int trans2);
+void if_intersection(int &start, int &end_station, int &start_line, int &end_line, string arr[], int answer);
+int kit_kat_check(int &end_station, int &start);
+void kitkat_branches(int &end_station, int &start);
+void list_same_line(int &start, int &end_station, string arr[], user_struct arr_users[]);
+void if_same_line(int &start, int &end_station, int &end_line, int &start_line, int answer);
+void check_line(int &start_line, int &end_line, int &end_station, int &start, string arr[], int answer);
+int counting_Rod_to_Cairo(int &end_station, int &start);
+int counting_Cairo_to_Rod(int &end_station, int &start);
+void Rod_to_Cairo_list(int &end_station, int &start, int answer);
+void Cairo_to_Rod_list(int &end_station, int &start, int answer);
+void start_calc(int &start, int &end_station, int &end_line, int &start_line, int answer);
 int current_zone_check(string stations);
-void zone_checker(string stations[], int& current_zone, int i, int& zone_counter);
+void zone_checker(string stations[], int &current_zone, int i, int &zone_counter);
 int station_to_zone(int numberofstations);
 int string_to_int_zone();
 bool zone_to_zone_check(int selected_zone);
@@ -269,10 +268,10 @@ void system_ride();
 void record_ride();
 void output_History_user_version();
 void output_History_admin_version();
-void remove_station(int& line_size, string arr_remove[]);
-void add_station(int& line_size, string arr[]);
+void remove_station(int &line_size, string arr_remove[]);
+void add_station(int &line_size, string arr[]);
 void edit(int line_size, string global_line[]);
-void History_Shift_Handling(bool opperation,int pos);
+void History_Shift_Handling(bool opperation, int pos);
 
 // History & Statistics
 void statistics();
@@ -320,7 +319,7 @@ void start_menu()
     }
 }
 
-string hidding_password_write(string& password)
+string hidding_password_write(string &password)
 {
     string hidden_password = "";
     char ch;
@@ -537,20 +536,20 @@ void storage_the_data_of_user_and_admin()
         {
             if (arr_user[i].role == 'A')
                 file_user_and_admin_output << arr_user[i].role << " "
-                << arr_user[i].id << " "
-                << arr_user[i].password << " "
-                << arr_user[i].age
-                << endl
-                << arr_user[i].name << endl;
+                                           << arr_user[i].id << " "
+                                           << arr_user[i].password << " "
+                                           << arr_user[i].age
+                                           << endl
+                                           << arr_user[i].name << endl;
             else
                 file_user_and_admin_output << arr_user[i].role << " "
-                << arr_user[i].id << " "
-                << arr_user[i].password << " "
-                << users[i].subscribiondetails.planType << " "
-                << users[i].balance << " "
-                << arr_user[i].age
-                << endl
-                << arr_user[i].name << endl;
+                                           << arr_user[i].id << " "
+                                           << arr_user[i].password << " "
+                                           << users[i].subscribiondetails.planType << " "
+                                           << users[i].balance << " "
+                                           << arr_user[i].age
+                                           << endl
+                                           << arr_user[i].name << endl;
         }
     }
     file_user_and_admin_output.close();
@@ -639,15 +638,15 @@ void view_all_accounts()
         {
             has_accounts = true;
             cout << "------------\n"
-                << "Name: " << arr_user[i].name << '\n'
-                << "Id: " << arr_user[i].id << '\n'
-                << "Password: " << arr_user[i].password << '\n'
-                << "Role: " << arr_user[i].role << '\n'
-                << "Age: " << arr_user[i].age << '\n';
+                 << "Name: " << arr_user[i].name << '\n'
+                 << "Id: " << arr_user[i].id << '\n'
+                 << "Password: " << arr_user[i].password << '\n'
+                 << "Role: " << arr_user[i].role << '\n'
+                 << "Age: " << arr_user[i].age << '\n';
             if (arr_user[i].role == 'U')
             {
                 cout << "Subscription Type: " << users[i].subscribiondetails.planType << '\n'
-                    << "Balance: " << users[i].balance << '\n';
+                     << "Balance: " << users[i].balance << '\n';
             }
             cout << "------------\n";
         }
@@ -787,6 +786,241 @@ void delete_account()
         cin >> c;
     }
     admin_main_menu();
+}
+
+void add_station(int &line_size, string arr[])
+{
+    cout << "At which position do you want to add a station" << '\n';
+    int pos_new_station;
+    cin >> pos_new_station;
+
+    // Shift elements in arr to make space for the new station
+    for (int i = number_of_stations; i > pos_new_station - 1; i--)
+    {
+        stations[i] = stations[i - 1];
+    }
+
+    cout << "Enter a name for the added station" << endl;
+    string new_station_name;
+    cin.ignore();
+    getline(cin, new_station_name);
+    arr[pos_new_station - 1] = new_station_name;
+    ++line_size;
+
+    // Update Rod_axis_station if necessary
+    if (pos_new_station <= Rod_axis_station)
+    {
+        ++Rod_axis_station;
+    }
+    ++number_of_stations;
+
+    // Update line indices
+    if (pos_new_station <= end_line1 && pos_new_station >= start_line1)
+    {
+        ++Al_Shohadaa_line2;
+        ++Attaba_line2;
+        ++Attaba_line3;
+        ++Nasser_line3;
+        ++start_line2;
+        ++start_line3;
+        ++end_line2;
+        ++end_line3;
+        kit_kat_1_station++;
+        kit_kat_2_station++;
+        History_Shift_Handling(1, pos_new_station);
+
+        if (pos_new_station < Al_Shohadaa_line1)
+        {
+            ++Al_Shohadaa_line1;
+            ++Nasser_line1;
+            ++end_line1;
+        }
+        else if (pos_new_station < Nasser_line1 && pos_new_station > Al_Shohadaa_line1)
+        {
+            ++Nasser_line1;
+            ++end_line1;
+        }
+        else
+        {
+            ++end_line1;
+        }
+    }
+    else if (pos_new_station <= end_line2 && pos_new_station >= start_line2)
+    {
+        ++Attaba_line3;
+        ++Nasser_line3;
+        ++end_line3;
+        ++start_line3;
+        kit_kat_1_station++;
+        kit_kat_2_station++;
+        start_station++;
+        History_Shift_Handling(1, pos_new_station);
+        if (start_station > pos_new_station)
+            start_station++;
+        if (pos_new_station < Al_Shohadaa_line2)
+        {
+            ++Al_Shohadaa_line2;
+            ++Attaba_line2;
+            ++end_line2;
+        }
+        else if (pos_new_station < Attaba_line2)
+        {
+            ++Attaba_line2;
+            ++end_line2;
+        }
+        else
+        {
+            ++end_line2;
+        }
+    }
+    else if (pos_new_station <= end_line3 && pos_new_station >= start_line3)
+    {
+        ++end_line3;
+        kit_kat_1_station++;
+        kit_kat_2_station++;
+        start_station++;
+        History_Shift_Handling(1, pos_new_station);
+        if (start_station > pos_new_station)
+            start_station++;
+        if (pos_new_station < Attaba_line3)
+        {
+            ++Attaba_line3;
+            ++Nasser_line3;
+        }
+        else if (pos_new_station < Nasser_line3)
+        {
+            ++Nasser_line3;
+        }
+    }
+
+    cout << '\n';
+    for (int i = 0; i < line_size; i++)
+    {
+        cout << stations[i] << endl;
+    }
+    cout << "\nyou added this station : " << new_station_name << '\n';
+}
+
+void remove_station(int &line_size, string arr_remove[])
+{
+    while (true)
+    {
+        cout << "which position do you want to remove a station" << '\n';
+        int pos_removed_station;
+        cin >> pos_removed_station;
+
+        if (!(pos_removed_station == Nasser_line3 || pos_removed_station == Nasser_line1 ||
+              pos_removed_station == Attaba_line3 || pos_removed_station == Attaba_line2 ||
+              pos_removed_station == Al_Shohadaa_line2 || pos_removed_station == Al_Shohadaa_line1))
+        {
+            string removedsation = stations[pos_removed_station - 1];
+            for (int i = pos_removed_station - 1; i < number_of_stations - 1; ++i)
+            {
+                stations[i] = stations[i + 1];
+            }
+
+            --number_of_stations;
+
+#if 1
+
+            if (pos_removed_station <= end_line1 && pos_removed_station >= start_line1)
+            {
+
+                --Al_Shohadaa_line2;
+                --Attaba_line2;
+                --Attaba_line3;
+                --Nasser_line3;
+                --start_line2;
+                --start_line3;
+                --end_line2;
+                --end_line3;
+                --end_line1;
+                kit_kat_1_station--;
+                kit_kat_2_station--;
+                History_Shift_Handling(0, pos_removed_station);
+                if (pos_removed_station < Al_Shohadaa_line1)
+                {
+                    --Al_Shohadaa_line1;
+                    --Nasser_line1;
+                }
+                else if (pos_removed_station < Nasser_line1 && pos_removed_station > Al_Shohadaa_line1)
+                {
+                    --Nasser_line1;
+                }
+            }
+            else if (pos_removed_station <= end_line2 && pos_removed_station >= start_line2)
+            {
+                --Attaba_line3;
+                --Nasser_line3;
+                --end_line3;
+                --start_line3;
+                kit_kat_1_station--;
+                kit_kat_2_station--;
+                History_Shift_Handling(0, pos_removed_station);
+                if (pos_removed_station < Al_Shohadaa_line2)
+                {
+                    --Al_Shohadaa_line2;
+                    --Attaba_line2;
+                    --end_line2;
+                }
+                else if (pos_removed_station < Attaba_line2)
+                {
+                    --Attaba_line2;
+                    --end_line2;
+                }
+                else
+                {
+                    --end_line2;
+                }
+            }
+            else if (pos_removed_station <= end_line3 && pos_removed_station >= start_line3)
+            {
+                --end_line3;
+                kit_kat_1_station--;
+                kit_kat_2_station--;
+                History_Shift_Handling(0, pos_removed_station);
+                if (pos_removed_station < Attaba_line3)
+                {
+                    --Attaba_line3;
+                    --Nasser_line3;
+                }
+                else if (pos_removed_station < Nasser_line3)
+                {
+                    --Nasser_line3;
+                }
+            }
+#endif
+            cout << '\n';
+            for (int i = 0; i < number_of_stations; i++)
+            {
+                cout << stations[i] << endl;
+            }
+            cout << "\nthe removed station is : " << removedsation << '\n';
+            break;
+        }
+        else
+        {
+            cout << "you can not remove transaction station\n";
+        }
+    }
+}
+
+void edit(int line_size, string global_line[])
+{
+    int number;
+    cout << "enter which station you want to change it is name : ";
+    cin >> number;
+    cout << '\n';
+    string currentname = stations[number - 1];
+    cin.ignore();
+    cout << "the ned name of the station : ";
+    getline(cin, stations[number - 1]);
+    cout << '\n';
+    for (int i = 0; i < number_of_stations; i++)
+    {
+        cout << stations[i] << '\n';
+    }
+    cout << "\nyou changed the name of station from " << currentname << " into " << stations[number - 1] << '\n';
 }
 
 void Admin_Subscriptions_prices_control()
@@ -1470,7 +1704,7 @@ void user_data_entry()
     }
 }
 
-void zoneselection(int& numberofstations)
+void zoneselection(int &numberofstations)
 {
     if (numberofstations >= 1 && numberofstations <= 9)
     {
@@ -1770,7 +2004,7 @@ void editPersonalData()
 
         // Ask for confirmation before adjusting the balance
         cout << "Changing the zone will result in a payment adjustment of "
-            << abs(paymentDifference) << " LE. ";
+             << abs(paymentDifference) << " LE. ";
         if (paymentDifference > 0)
         {
             cout << "You will be refunded this amount.\n";
@@ -1834,11 +2068,11 @@ void viewSubscriptionPlan()
     cout << "Subscription Plan:\n";
     cout << "Plan Type: " << planType << endl;
     cout << "Activation Date: " << users[global_id].subscribiondetails.activationDatedetails.day << "/"
-        << users[global_id].subscribiondetails.activationDatedetails.month << "/"
-        << users[global_id].subscribiondetails.activationDatedetails.year << endl;
+         << users[global_id].subscribiondetails.activationDatedetails.month << "/"
+         << users[global_id].subscribiondetails.activationDatedetails.year << endl;
     cout << "Expiry Date: " << users[global_id].subscribiondetails.expiryDatedetails.day << "/"
-        << users[global_id].subscribiondetails.expiryDatedetails.month << "/"
-        << users[global_id].subscribiondetails.expiryDatedetails.year << endl;
+         << users[global_id].subscribiondetails.expiryDatedetails.month << "/"
+         << users[global_id].subscribiondetails.expiryDatedetails.year << endl;
     cout << "Remaining Trips: " << users[global_id].subscribiondetails.remainingTrips << endl;
     cout << "Zones: " << users[global_id].subscribiondetails.zones << endl;
     cout << "Payment: " << users[global_id].subscribiondetails.payment << " LE" << endl;
@@ -2017,7 +2251,7 @@ void record_ride()
 {
     time_t now = time(nullptr);
     struct tm localTime;
-    localtime_s(&localTime, &now); 
+    localtime_s(&localTime, &now);
     RideHistory[global_id].ride_of_user[numberf_of_trips].ride_date.tm_mday = localTime.tm_mday;
     RideHistory[global_id].ride_of_user[numberf_of_trips].ride_date.tm_mon = localTime.tm_mon + 1;
     RideHistory[global_id].ride_of_user[numberf_of_trips].ride_date.tm_year = localTime.tm_year + 1900;
@@ -2036,14 +2270,14 @@ void output_History_user_version()
         if (RideHistory[global_id].ride_of_user[i].ride_id == 0)
             continue;
         cout << "Ride ID: " << RideHistory[global_id].ride_of_user[i].ride_id << endl;
-        cout << "Start Station: " << stations[RideHistory[global_id].ride_of_user[i].start_station-1] << endl;
-        cout << "End Station: " << stations[RideHistory[global_id].ride_of_user[i].end_station-1] << endl;
+        cout << "Start Station: " << stations[RideHistory[global_id].ride_of_user[i].start_station - 1] << endl;
+        cout << "End Station: " << stations[RideHistory[global_id].ride_of_user[i].end_station - 1] << endl;
         cout << "Date: " << RideHistory[global_id].ride_of_user[i].ride_date.tm_mday << "/"
-            << RideHistory[global_id].ride_of_user[i].ride_date.tm_mon << "/"
-            << RideHistory[global_id].ride_of_user[i].ride_date.tm_year << endl;
+             << RideHistory[global_id].ride_of_user[i].ride_date.tm_mon << "/"
+             << RideHistory[global_id].ride_of_user[i].ride_date.tm_year << endl;
         cout << "Time: " << RideHistory[global_id].ride_of_user[i].ride_date.tm_hour << ":"
-            << RideHistory[global_id].ride_of_user[i].ride_date.tm_min << ":"
-            << RideHistory[global_id].ride_of_user[i].ride_date.tm_sec << endl;
+             << RideHistory[global_id].ride_of_user[i].ride_date.tm_min << ":"
+             << RideHistory[global_id].ride_of_user[i].ride_date.tm_sec << endl;
         cout << endl;
     }
 }
@@ -2062,37 +2296,37 @@ void output_History_admin_version()
                 if (RideHistory[i].ride_of_user[j].ride_id == 0)
                     continue;
                 cout << "Ride ID: " << RideHistory[i].ride_of_user[j].ride_id << endl;
-                cout << "Start Station: " << stations[RideHistory[i].ride_of_user[j].start_station-1] << endl;
-                cout << "End Station: " << stations[RideHistory[i].ride_of_user[j].end_station-1] << endl;
+                cout << "Start Station: " << stations[RideHistory[i].ride_of_user[j].start_station - 1] << endl;
+                cout << "End Station: " << stations[RideHistory[i].ride_of_user[j].end_station - 1] << endl;
                 cout << "Date: " << RideHistory[i].ride_of_user[j].ride_date.tm_mday << "/"
-                    << RideHistory[i].ride_of_user[j].ride_date.tm_mon << "/"
-                    << RideHistory[i].ride_of_user[j].ride_date.tm_year << endl;
+                     << RideHistory[i].ride_of_user[j].ride_date.tm_mon << "/"
+                     << RideHistory[i].ride_of_user[j].ride_date.tm_year << endl;
                 cout << "Time: " << RideHistory[i].ride_of_user[j].ride_date.tm_hour << ":"
-                    << RideHistory[i].ride_of_user[j].ride_date.tm_min << ":"
-                    << RideHistory[i].ride_of_user[j].ride_date.tm_sec << endl;
+                     << RideHistory[i].ride_of_user[j].ride_date.tm_min << ":"
+                     << RideHistory[i].ride_of_user[j].ride_date.tm_sec << endl;
                 cout << endl;
             }
         }
     }
 }
 
-void start_loop_odd_cases(int i, int& start, int& end_station, int trans1, int trans2, string arr[])
+void start_loop_odd_cases(int i, int &start, int &end_station, int trans1, int trans2, string arr[])
 {
 
     if (i == trans1 && i != start)
     {
         cout << "\t\t\t\t\t| " << endl
-            << "\t\t\t\t\tV " << endl;
+             << "\t\t\t\t\tV " << endl;
         if (trans2 != end_station)
             cout << "\t\t\t\t     " << arr[i - 1] << endl
-            << "\n\t\t     =========> Changing Line <=========\n"
-            << endl; // Arrow indicating transition between lines
+                 << "\n\t\t     =========> Changing Line <=========\n"
+                 << endl; // Arrow indicating transition between lines
     }
     else if (i != start)
     {
         cout << "\t\t\t\t\t| " << endl
-            << "\t\t\t\t\tV " << endl
-            << "\t\t\t\t     " << arr[i - 1] << endl;
+             << "\t\t\t\t\tV " << endl
+             << "\t\t\t\t     " << arr[i - 1] << endl;
     }
     else if (i == start_station && i != trans1)
     {
@@ -2100,22 +2334,22 @@ void start_loop_odd_cases(int i, int& start, int& end_station, int trans1, int t
     }
 }
 
-void start_loop_even_cases(int i, int& start, int& end_station, int trans1, int trans2, string arr[])
+void start_loop_even_cases(int i, int &start, int &end_station, int trans1, int trans2, string arr[])
 {
     if (i == trans2 && i != start)
     {
         cout << "\t\t\t\t\t| " << endl
-            << "\t\t\t\t\tV " << endl;
+             << "\t\t\t\t\tV " << endl;
         if (trans1 != end_station)
             cout << "\t\t\t\t       " << arr[i - 1] << endl
-            << "\n\t\t     =========> Changing Line <=========\n"
-            << endl; // Arrow indicating transition between lines
+                 << "\n\t\t     =========> Changing Line <=========\n"
+                 << endl; // Arrow indicating transition between lines
     }
     else if (i != start)
     {
         cout << "\t\t\t\t\t| " << endl
-            << "\t\t\t\t\tV " << endl
-            << "\t\t\t\t       " << arr[i - 1] << endl;
+             << "\t\t\t\t\tV " << endl
+             << "\t\t\t\t       " << arr[i - 1] << endl;
     }
     else if (i == start_station && i != trans2)
     {
@@ -2128,8 +2362,8 @@ void end_loop(int i, int end_station, string arr[])
     if (i != end_station)
     {
         cout << "\t\t\t\t     " << arr[i - 1] << endl
-            << "\t\t\t\t\t|" << endl
-            << "\t\t\t\t\tV" << endl;
+             << "\t\t\t\t\t|" << endl
+             << "\t\t\t\t\tV" << endl;
     }
 
     else
@@ -2138,7 +2372,7 @@ void end_loop(int i, int end_station, string arr[])
     }
 }
 
-void case1(int& start, int& end_station, int trans1, int trans2, string arr[])
+void case1(int &start, int &end_station, int trans1, int trans2, string arr[])
 {
     int current_zone = current_zone_check(stations[start_station - 1]);
     int zone_counter = 1;
@@ -2160,10 +2394,10 @@ void case1(int& start, int& end_station, int trans1, int trans2, string arr[])
     }
     if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
         cout << endl
-        << "Number of geographical zones = " << zone_counter << endl;
+             << "Number of geographical zones = " << zone_counter << endl;
 }
 
-void case2(int& start, int& end_station, int trans1, int trans2, string arr[])
+void case2(int &start, int &end_station, int trans1, int trans2, string arr[])
 {
     int current_zone = current_zone_check(stations[start_station - 1]);
     int zone_counter = 1;
@@ -2186,10 +2420,10 @@ void case2(int& start, int& end_station, int trans1, int trans2, string arr[])
     }
     if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
         cout << endl
-        << "Number of geographical zones = " << zone_counter << endl;
+             << "Number of geographical zones = " << zone_counter << endl;
 }
 
-void case3(int& start, int& end_station, int trans1, int trans2, string arr[]) // start_stationbefore trans and end after trans
+void case3(int &start, int &end_station, int trans1, int trans2, string arr[]) // start_stationbefore trans and end after trans
 {
 
     int current_zone = current_zone_check(stations[start_station - 1]);
@@ -2214,10 +2448,10 @@ void case3(int& start, int& end_station, int trans1, int trans2, string arr[]) /
     }
     if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
         cout << endl
-        << "Number of geographical zones = " << zone_counter << endl;
+             << "Number of geographical zones = " << zone_counter << endl;
 }
 
-void case4(int& start, int& end_station, int trans1, int trans2, string arr[]) // start_stationbefore trans and end after trans
+void case4(int &start, int &end_station, int trans1, int trans2, string arr[]) // start_stationbefore trans and end after trans
 {
     int current_zone = current_zone_check(stations[start_station - 1]);
     int zone_counter = 1;
@@ -2239,10 +2473,10 @@ void case4(int& start, int& end_station, int trans1, int trans2, string arr[]) /
     }
     if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
         cout << endl
-        << "Number of geographical zones = " << zone_counter << endl;
+             << "Number of geographical zones = " << zone_counter << endl;
 }
 
-void case5(int& start, int& end_station, int trans1, int trans2, string arr[])
+void case5(int &start, int &end_station, int trans1, int trans2, string arr[])
 {
     int current_zone = current_zone_check(stations[start_station - 1]);
     int zone_counter = 1;
@@ -2264,10 +2498,10 @@ void case5(int& start, int& end_station, int trans1, int trans2, string arr[])
     }
     if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
         cout << endl
-        << "Number of geographical zones = " << zone_counter << endl;
+             << "Number of geographical zones = " << zone_counter << endl;
 }
 
-void case6(int& start, int& end_station, int trans1, int trans2, string arr[])
+void case6(int &start, int &end_station, int trans1, int trans2, string arr[])
 {
     int current_zone = current_zone_check(stations[start_station - 1]);
     int zone_counter = 1;
@@ -2290,10 +2524,10 @@ void case6(int& start, int& end_station, int trans1, int trans2, string arr[])
     }
     if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
         cout << endl
-        << "Number of geographical zones = " << zone_counter << endl;
+             << "Number of geographical zones = " << zone_counter << endl;
 }
 
-void case7(int& start, int& end_station, int trans1, int trans2, string arr[])
+void case7(int &start, int &end_station, int trans1, int trans2, string arr[])
 {
     int current_zone = current_zone_check(stations[start_station - 1]);
     int zone_counter = 1;
@@ -2316,10 +2550,10 @@ void case7(int& start, int& end_station, int trans1, int trans2, string arr[])
     }
     if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
         cout << endl
-        << "Number of geographical zones = " << zone_counter << endl;
+             << "Number of geographical zones = " << zone_counter << endl;
 }
 
-void case8(int& start, int& end_station, int trans1, int trans2, string arr[])
+void case8(int &start, int &end_station, int trans1, int trans2, string arr[])
 {
     int current_zone = current_zone_check(stations[start_station - 1]);
     int zone_counter = 1;
@@ -2341,17 +2575,17 @@ void case8(int& start, int& end_station, int trans1, int trans2, string arr[])
     }
     if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
         cout << endl
-        << "Number of geographical zones = " << zone_counter << endl;
+             << "Number of geographical zones = " << zone_counter << endl;
 }
 
-int counting_Rod_to_Cairo(int& end_station, int& start)
+int counting_Rod_to_Cairo(int &end_station, int &start)
 {
 
     int result = ((start_station - kit_kat_1_station) + (end_station - (kit_kat_1_station + 5)));
     return result;
 }
 
-int counting_Cairo_to_Rod(int& end_station, int& start)
+int counting_Cairo_to_Rod(int &end_station, int &start)
 {
 
     int result = ((end_station - kit_kat_1_station) + (start_station - (kit_kat_1_station + 5)));
@@ -2359,10 +2593,10 @@ int counting_Cairo_to_Rod(int& end_station, int& start)
     return result;
 }
 
-void Rod_to_Cairo_list(int& end_station, int& start, int answer)
+void Rod_to_Cairo_list(int &end_station, int &start, int answer)
 {
-    string Rod_stations[7] = { "Kit-Kat", "Sudan", "Imbaba", "El-Bohy", "Al-Qawmeya Al-Arabiya", "Ring Road", "Rod al-Farag Axis" };
-    string Cairo_stations[5] = { "El-Tawfikeya", "Wadi El-Nil", "Gamaat El Dowal Al-Arabiya", "Bulaq El-Dakroor", "Cairo University" };
+    string Rod_stations[7] = {"Kit-Kat", "Sudan", "Imbaba", "El-Bohy", "Al-Qawmeya Al-Arabiya", "Ring Road", "Rod al-Farag Axis"};
+    string Cairo_stations[5] = {"El-Tawfikeya", "Wadi El-Nil", "Gamaat El Dowal Al-Arabiya", "Bulaq El-Dakroor", "Cairo University"};
 
     int zone_counter = 1;
     int selected_zone = (station_to_zone(counting_Rod_to_Cairo(end_station, start)));
@@ -2374,30 +2608,30 @@ void Rod_to_Cairo_list(int& end_station, int& start, int answer)
     for (int i = (start_station - 1 - kit_kat_1_station); i >= 0; i--)
     {
         cout << "\t\t\t\t\t| " << endl
-            << "\t\t\t\t\tV " << endl
-            << "\t\t\t\t     " << Rod_stations[i] << endl;
+             << "\t\t\t\t\tV " << endl
+             << "\t\t\t\t     " << Rod_stations[i] << endl;
     }
 
     cout << "\t\t\t\t\t| " << endl
-        << "\t\t\t\t\tV " << endl;
+         << "\t\t\t\t\tV " << endl;
     cout << "\t\t\t\t     " << Cairo_stations[0] << endl;
     for (int i = 1; i <= end_station - kit_kat_2_station; i++)
     {
         cout << "\t\t\t\t\t| " << endl
-            << "\t\t\t\t\tV " << endl
-            << "\t\t\t\t     " << Cairo_stations[i] << endl;
+             << "\t\t\t\t\tV " << endl
+             << "\t\t\t\t     " << Cairo_stations[i] << endl;
     }
     cout << "Number of selected stations = " << counting_Rod_to_Cairo(end_station, start) << endl;
     if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
         cout << endl
-        << "Number of geographical zones = " << zone_counter << endl;
+             << "Number of geographical zones = " << zone_counter << endl;
     check_out(answer, selected_zone);
 }
 
-void Cairo_to_Rod_list(int& end_station, int& start, int answer)
+void Cairo_to_Rod_list(int &end_station, int &start, int answer)
 {
-    string Rod_stations[7] = { "Kit Kat ", "Sudan", "Imbaba ", "El-Bohy ", "Al-Qawmeya Al-Arabiya ", "Ring Road ", "Rod al-Farag Axis " };
-    string Cairo_stations[5] = { "El-Tawfikeya ", "Wadi El-Nil", "Gamaat El Dowal Al-Arabiya ", "Bulaq El-Dakroor ", "Cairo University" };
+    string Rod_stations[7] = {"Kit Kat ", "Sudan", "Imbaba ", "El-Bohy ", "Al-Qawmeya Al-Arabiya ", "Ring Road ", "Rod al-Farag Axis "};
+    string Cairo_stations[5] = {"El-Tawfikeya ", "Wadi El-Nil", "Gamaat El Dowal Al-Arabiya ", "Bulaq El-Dakroor ", "Cairo University"};
 
     int zone_counter = 1;
     int selected_zone = (station_to_zone(counting_Cairo_to_Rod(end_station, start)));
@@ -2408,26 +2642,26 @@ void Cairo_to_Rod_list(int& end_station, int& start, int answer)
     for (int i = (start_station - 1 - kit_kat_2_station); i >= 0; i--)                    // ( -1 ==> to start_stationfrom second station )
     {
         cout << "\t\t\t\t\t| " << endl
-            << "\t\t\t\t\tV " << endl
-            << "\t\t\t\t     " << Cairo_stations[i] << endl;
+             << "\t\t\t\t\tV " << endl
+             << "\t\t\t\t     " << Cairo_stations[i] << endl;
     }
     cout << "\t\t\t\t\t| " << endl
-        << "\t\t\t\t\tV" << endl;
+         << "\t\t\t\t\tV" << endl;
     cout << "\t\t\t\t     " << Rod_stations[0] << endl;
     for (int i = 1; i <= end_station - kit_kat_1_station; i++)
     {
         cout << "\t\t\t\t\t| " << endl
-            << "\t\t\t\t\tV " << endl
-            << "\t\t\t\t     " << Rod_stations[i] << endl;
+             << "\t\t\t\t\tV " << endl
+             << "\t\t\t\t     " << Rod_stations[i] << endl;
     }
     cout << "Number of selected stations = " << counting_Cairo_to_Rod(end_station, start) << endl;
     if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
         cout << endl
-        << "Number of geographical zones = " << zone_counter << endl;
+             << "Number of geographical zones = " << zone_counter << endl;
     check_out(answer, selected_zone);
 }
 
-void cases(int& start, int& end_station, int trans1, int trans2, string arr[])
+void cases(int &start, int &end_station, int trans1, int trans2, string arr[])
 {
     if (start_station < end_station)
     { // starting ascendingly
@@ -2469,22 +2703,22 @@ void cases(int& start, int& end_station, int trans1, int trans2, string arr[])
     }
 }
 
-void list_intersect_line_1_2(int& start, int& end_station, string arr[], int trans1 = Al_Shohadaa_line1, int trans2 = Al_Shohadaa_line2)
+void list_intersect_line_1_2(int &start, int &end_station, string arr[], int trans1 = Al_Shohadaa_line1, int trans2 = Al_Shohadaa_line2)
 {
     cases(start, end_station, trans1, trans2, arr);
 }
 
-void list_intersect_line_2_3(int& start, int& end_station, string arr[], int trans2 = Attaba_line2, int trans3 = Attaba_line3)
+void list_intersect_line_2_3(int &start, int &end_station, string arr[], int trans2 = Attaba_line2, int trans3 = Attaba_line3)
 {
     cases(start, end_station, trans2, trans3, arr);
 }
 
-void list_intersect_line_1_3(int& start, int& end_station, string arr[], int trans1 = Nasser_line1, int trans3 = Nasser_line3)
+void list_intersect_line_1_3(int &start, int &end_station, string arr[], int trans1 = Nasser_line1, int trans3 = Nasser_line3)
 {
     cases(start, end_station, trans1, trans3, arr);
 }
 
-int counting_intersected_stations(int& start_station, int& end_station, int trans1, int trans2)
+int counting_intersected_stations(int &start_station, int &end_station, int trans1, int trans2)
 {
     if (start_station > end_station)
     {
@@ -2504,7 +2738,7 @@ int counting_intersected_stations(int& start_station, int& end_station, int tran
     }
 }
 
-void input_start_data(int& start_line, int& start_station)
+void input_start_data(int &start_line, int &start_station)
 {
     do
     {
@@ -2516,7 +2750,7 @@ void input_start_data(int& start_line, int& start_station)
 
             // leave the rest of the line
             cin.ignore(numeric_limits<streamsize>::max(),
-                '\n');
+                       '\n');
 
             // Ask the user to enter a valid int number only
             cout << "Wrong input,";
@@ -2528,7 +2762,7 @@ void input_start_data(int& start_line, int& start_station)
                 cout << "Please choose start_stationstation" << endl;
                 start_station = choose_line(start_line, start_station);
                 cout << "+-----------------------------------------------------------------------------+" << endl;
-                
+
                 break;
             }
             else
@@ -2538,7 +2772,7 @@ void input_start_data(int& start_line, int& start_station)
     } while (true);
 }
 
-void input_end_data(int& end_line, int& end_station)
+void input_end_data(int &end_line, int &end_station)
 {
     do
     {
@@ -2550,7 +2784,7 @@ void input_end_data(int& end_line, int& end_station)
 
             // leave the rest of the line
             cin.ignore(numeric_limits<streamsize>::max(),
-                '\n');
+                       '\n');
 
             // Ask the user to enter a valid int number only
             cout << "Wrong input,";
@@ -2562,7 +2796,7 @@ void input_end_data(int& end_line, int& end_station)
                 cout << "Please choose end station" << endl;
                 end_station = choose_line(end_line, end_station);
                 cout << "+-----------------------------------------------------------------------------+" << endl;
-               
+
                 break;
             }
             else
@@ -2572,7 +2806,7 @@ void input_end_data(int& end_line, int& end_station)
     } while (true);
 }
 
-void if_intersection(int& start, int& end_station, int& start_line, int& end_line, string arr[], int answer)
+void if_intersection(int &start, int &end_station, int &start_line, int &end_line, string arr[], int answer)
 {
 
     do
@@ -2604,7 +2838,7 @@ void if_intersection(int& start, int& end_station, int& start_line, int& end_lin
                     cout << "+-----------------------------------------------------------------------------+" << endl;
                     list_intersect_line_1_2(start, end_station, stations); // lisiting stations of the trip
                     cout << "Number of selected stations = " << selected_stations << endl
-                        << endl;
+                         << endl;
                     check_out(answer, selected_zone); // check out to deduct according to the user plantype
                 }
 
@@ -2618,7 +2852,7 @@ void if_intersection(int& start, int& end_station, int& start_line, int& end_lin
                 cout << "+-----------------------------------------------------------------------------+" << endl;
                 list_intersect_line_1_2(start, end_station, stations); // lisiting stations of the trip
                 cout << "Number of selected stations = " << selected_stations << endl
-                    << endl;
+                     << endl;
                 check_out(answer, selected_zone); // check out to deduct according to the user plantype
             }
         }
@@ -2637,7 +2871,7 @@ void if_intersection(int& start, int& end_station, int& start_line, int& end_lin
                 cout << "+-----------------------------------------------------------------------------+" << endl;
                 list_intersect_line_2_3(start, end_station, stations);
                 cout << "Number of selected stations = " << selected_stations << endl
-                    << endl;
+                     << endl;
                 check_out(answer, selected_zone);
             }
 
@@ -2661,7 +2895,7 @@ void if_intersection(int& start, int& end_station, int& start_line, int& end_lin
                 cout << "+-----------------------------------------------------------------------------+" << endl;
                 list_intersect_line_1_3(start, end_station, stations);
                 cout << "Number of selected stations = " << selected_stations << endl
-                    << endl;
+                     << endl;
                 check_out(answer, selected_zone);
             }
 
@@ -2673,7 +2907,7 @@ void if_intersection(int& start, int& end_station, int& start_line, int& end_lin
     }
 }
 
-int kit_kat_check(int& end_station, int& start)
+int kit_kat_check(int &end_station, int &start)
 {
     if (start_station <= Rod_axis_station && end_station <= Rod_axis_station) // to include Rod- El Farag Branch
         return 1;
@@ -2689,17 +2923,17 @@ int kit_kat_check(int& end_station, int& start)
         return 4;
 }
 
-void kitkat_branches(int& end_station, int& start)
+void kitkat_branches(int &end_station, int &start)
 {
     if (kit_kat_check(end_station, start) == 1)
     {
-        string rod_El_farag_branch[] = { "Sudan", "Imbaba", "El-Bohy", "Al-Qawmeya Al-Arabiya", "Ring Road", "Rod al-Farag Axis" };
+        string rod_El_farag_branch[] = {"Sudan", "Imbaba", "El-Bohy", "Al-Qawmeya Al-Arabiya", "Ring Road", "Rod al-Farag Axis"};
         for (int i = 0; i < 6; i++)
             stations[kit_kat_1_station + i] = rod_El_farag_branch[i];
     }
     else
     {
-        string cairo_branch[] = { "El-Tawfikeya", "Wadi El-Nil", "Gamaat El Dowal Al-Arabiya", "Bulaq El-Dakroor", "Cairo University" };
+        string cairo_branch[] = {"El-Tawfikeya", "Wadi El-Nil", "Gamaat El Dowal Al-Arabiya", "Bulaq El-Dakroor", "Cairo University"};
         for (int i = 0; i < 5; i++)
             stations[kit_kat_1_station + i] = cairo_branch[i];
     }
@@ -2710,17 +2944,17 @@ void same_line_loop(int i, int start, string arr[])
     if (i != start)
     {
         cout << "\t\t\t\t\t| " << endl
-            << "\t\t\t\t\tV " << endl
-            << "\t\t\t\t     " << arr[i - 1] << endl;
+             << "\t\t\t\t\tV " << endl
+             << "\t\t\t\t     " << arr[i - 1] << endl;
     }
     else
     {
         cout << endl
-            << "\t\t\t\t     " << arr[start_station - 1] << endl;
+             << "\t\t\t\t     " << arr[start_station - 1] << endl;
     }
 }
 
-void list_same_line(int& start, int& end_station, string arr[], user_struct arr_users[])
+void list_same_line(int &start, int &end_station, string arr[], user_struct arr_users[])
 {
     int current_zone = current_zone_check(stations[start_station - 1]);
     int zone_counter = 1;
@@ -2735,7 +2969,7 @@ void list_same_line(int& start, int& end_station, string arr[], user_struct arr_
         }
         if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
             cout << endl
-            << "Number of geographical zones = " << zone_counter << endl;
+                 << "Number of geographical zones = " << zone_counter << endl;
     }
     else if (start_station < end_station)
     {
@@ -2746,11 +2980,11 @@ void list_same_line(int& start, int& end_station, string arr[], user_struct arr_
         }
         if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
             cout << endl
-            << "Number of geographical zones = " << zone_counter << endl;
+                 << "Number of geographical zones = " << zone_counter << endl;
     }
 }
 
-void if_same_line(int& start, int& end_station, int& end_line, int& start_line, int answer)
+void if_same_line(int &start, int &end_station, int &end_line, int &start_line, int answer)
 {
 
     if (end_station - start_station > 0)
@@ -2783,7 +3017,7 @@ void if_same_line(int& start, int& end_station, int& end_line, int& start_line, 
             cout << "+-----------------------------------------------------------------------------+" << endl;
             list_same_line(start, end_station, stations, users);
             cout << "Number of selected stations = " << selected_stations << endl
-                << endl;
+                 << endl;
             check_out(answer, selected_zone);
         }
         else
@@ -2795,13 +3029,13 @@ void if_same_line(int& start, int& end_station, int& end_line, int& start_line, 
     else
     {
         cout << endl
-            << "Please enter a different end or start_stationstation" << endl
-            << endl;
+             << "Please enter a different end or start_stationstation" << endl
+             << endl;
         start_calc(start, end_station, end_line, start_line, answer);
     }
 }
 
-void check_line(int& start_line, int& end_line, int& end_station, int& start, string arr[], int answer)
+void check_line(int &start_line, int &end_line, int &end_station, int &start, string arr[], int answer)
 {
     if (start_line == 3 || end_line == 3) // if line 3 is chosen
     {
@@ -2842,21 +3076,28 @@ void check_line(int& start_line, int& end_line, int& end_station, int& start, st
     }
 }
 
-int choose_line(int& line_num, int& station_num)
+int choose_line(int &line_num, int &station_num)
 {
     if (line_num == 1)
     {
+
         cout << "+-----------------------------------------------------------------------------+" << endl;
         cout << "|                                 Line 1 Stations                             |" << endl;
         cout << "+-----------------------------------------------------------------------------+" << endl;
-		for (int j = 0; j < line1_size; j++)
-		{
-		
-            cout << " " << j + 1 << "." << stations[j]  << endl;
-
-
-        }
+        cout << "| 1.New El-Marg            | 2.El-Marg              | 3.Ezbet El-Nakhl        |" << endl;
+        cout << "| 4.Ain Shams              | 5.El-Matareyya         | 6.Helmeyet El-Zaitoun   |" << endl;
+        cout << "| 7.Hadayeq El-Zaitoun     | 8.Saray El-Qobba       | 9.Hammamat El-Qobba     |" << endl;
+        cout << "| 10.Kobri El-Qobba        | 11.Manshiet El-Sadr    | 12.El-Demerdash         |" << endl;
+        cout << "| 13.Ghamra                | 14.Al-Shohadaa         | 15.Orabi                |" << endl;
+        cout << "| 16.Nasser                | 17.Sadat               | 18.Saad Zaghloul        |" << endl;
+        cout << "| 19.Al-Sayeda Zeinab      | 20.El-Malek El-Saleh   | 21.Mar Girgis           |" << endl;
+        cout << "| 22.El-Zahraa             | 23.Dar El-Salam        | 24.Hadayek El-Maadi     |" << endl;
+        cout << "| 25.Maadi                 | 26.Sakanat El-Maadi    | 27.Tora El-Balad        |" << endl;
+        cout << "| 28.Kozzika               | 29.Tora El-Asmant      | 30.El-Maasara           |" << endl;
+        cout << "| 31.Hadayek Helwan        | 32.Wadi Hof            | 33.Helwan University    |" << endl;
+        cout << "| 34.Ain Helwan            | 35.Helwan              |                         |" << endl;
         cout << "+-----------------------------------------------------------------------------+" << endl;
+
         do
         {
             cin >> station_num;
@@ -2884,17 +3125,16 @@ int choose_line(int& line_num, int& station_num)
     }
     else if (line_num == 2)
     {
-
         cout << "+-----------------------------------------------------------------------------+" << endl;
         cout << "|                                 Line 2 Stations                             |" << endl;
         cout << "+-----------------------------------------------------------------------------+" << endl;
-        for (int j = 0; j < line2_size; j++)
-        {
-
-            cout << " " << j + 1 << "." << stations[j] << endl;
-
-
-        }
+        cout << "| 36.Shubra El-Kheima      | 37.Kolleyyet El-Zeraa  | 38.Mezallat             |" << endl;
+        cout << "| 39.Khalafawy             | 40.St. Teresa          | 41.Road El-Farag        |" << endl;
+        cout << "| 42.Masarra               | 43.Al-Shohadaa         | 44.Attaba               |" << endl;
+        cout << "| 45.Mohamed Naguib        | 46.Sadat               | 47.Opera                |" << endl;
+        cout << "| 48.Dokki                 | 49.El Bohoth           | 50.Cairo University     |" << endl;
+        cout << "| 51.Faisal                | 52.El Giza             | 53.Omm El-Masryeen      |" << endl;
+        cout << "| 54.Sakiat Mekky          | 55.El-Mounib           |                         |" << endl;
         cout << "+-----------------------------------------------------------------------------+" << endl;
         do
         {
@@ -2905,7 +3145,7 @@ int choose_line(int& line_num, int& station_num)
 
                 // leave the rest of the line
                 cin.ignore(numeric_limits<streamsize>::max(),
-                    '\n');
+                           '\n');
 
                 // Ask the user to enter a valid int number only
                 cout << "Wrong input,Please enter a number" << endl;
@@ -2924,17 +3164,21 @@ int choose_line(int& line_num, int& station_num)
     }
     else if (line_num == 3)
     {
-
         cout << "+-----------------------------------------------------------------------------+" << endl;
         cout << "|                                 Line 3 Stations                             |" << endl;
         cout << "+-----------------------------------------------------------------------------+" << endl;
-        for (int j = 0; j < line3_size; j++)
-        {
-
-            cout << " " << j + 1 << "." << stations[j] << endl;
-
-
-        }
+        cout << "| 56.Adly Mansour          | 57.El Haykestep        | 58.Omar Ibn El-Khattab  |" << endl;
+        cout << "| 59.Qobaa                 | 60.Hesham Barakat      | 61.El-Nozha             |" << endl;
+        cout << "| 62.Nadi El-Shams         | 63.Alf Maskan          | 64.Heliopolis           |" << endl;
+        cout << "| 65.Haroun                | 66.Al-Ahram            | 67.Koleyet El-Banat     |" << endl;
+        cout << "| 68.Stadium               | 69.Fair Zone           | 70.Abbassia             |" << endl;
+        cout << "| 71.Abdou Pasha           | 72.El Geish            | 73.Bab El Shaaria       |" << endl;
+        cout << "| 74.Attaba                | 75.Nasser              | 76.Maspero              |" << endl;
+        cout << "| 77.Safaa Hegazy          | 78.Kit Kat             | 79.Sudan                |" << endl;
+        cout << "| 80.Imbaba                | 81.El-Bohy             | 82.Al-Qawmeya Al-Arabiya|" << endl;
+        cout << "| 83.Ring Road             | 84.Rod al-Farag Axis   | 85.El-Tawfikeya         |" << endl;
+        cout << "| 86.Wadi El-Nil           | 87.Gamaat El Dowal     | 88.Bulaq El-Dakroor     |" << endl;
+        cout << "| 89.Cairo University      |                        |                         |" << endl;
         cout << "+-----------------------------------------------------------------------------+" << endl;
         do
         {
@@ -2945,7 +3189,7 @@ int choose_line(int& line_num, int& station_num)
 
                 // leave the rest of the line
                 cin.ignore(numeric_limits<streamsize>::max(),
-                    '\n');
+                           '\n');
 
                 // Ask the user to enter a valid int number only
                 cout << "Wrong input,Please enter a number" << endl;
@@ -2969,19 +3213,19 @@ void enter_startline()
 {
     cout << "Please choose startline" << endl;
     cout << "1. Line 1" << endl
-        << "2. Line 2" << endl
-        << "3. Line 3" << endl;
+         << "2. Line 2" << endl
+         << "3. Line 3" << endl;
 }
 
 void enter_endline()
 {
     cout << "Please choose endline" << endl;
     cout << "1. Line 1" << endl
-        << "2. Line 2" << endl
-        << "3. Line 3" << endl;
+         << "2. Line 2" << endl
+         << "3. Line 3" << endl;
 }
 
-void start_calc(int& start, int& end_station, int& end_line, int& start_line, int answer)
+void start_calc(int &start, int &end_station, int &end_line, int &start_line, int answer)
 {
     do
     {
@@ -2998,7 +3242,7 @@ void start_calc(int& start, int& end_station, int& end_line, int& start_line, in
 
                 // leave the rest of the line
                 cin.ignore(numeric_limits<streamsize>::max(),
-                    '\n');
+                           '\n');
 
                 // Ask the user to enter a valid int number only
                 cout << "+-----------------------------------------------------------------------------+" << endl;
@@ -3112,7 +3356,7 @@ int current_zone_check(string stations)
     return 0;
 }
 
-void zone_checker(string stations[], int& current_zone, int i, int& zone_counter)
+void zone_checker(string stations[], int &current_zone, int i, int &zone_counter)
 {
 
     int new_current_zone = current_zone_check(stations[i - 1]);
@@ -3183,7 +3427,7 @@ void trips_deduction_general_or_scholar()
         --users[global_id].subscribiondetails.remainingTrips;
         cout << "+-----------------------------------------------------------------------------+" << endl;
         cout << "Your trip is sucessfully booked" << endl
-            << "Remaining trips = " << users[global_id].subscribiondetails.remainingTrips << endl;
+             << "Remaining trips = " << users[global_id].subscribiondetails.remainingTrips << endl;
         cout << "+-----------------------------------------------------------------------------+" << endl;
     }
     else if (users[global_id].balance < users[global_id].subscribiondetails.payment)
@@ -3192,8 +3436,8 @@ void trips_deduction_general_or_scholar()
         {
             cout << "+-----------------------------------------------------------------------------+" << endl;
             cout << "You have no more trips" << endl
-                << "Please top up your balance and renew subscription" << endl
-                << "Enter 1 return to main menu" << endl;
+                 << "Please top up your balance and renew subscription" << endl
+                 << "Enter 1 return to main menu" << endl;
             if (answer == 1)
             {
                 user_main_menu();
@@ -3206,7 +3450,7 @@ void trips_deduction_general_or_scholar()
     {
         cout << "+-----------------------------------------------------------------------------+" << endl;
         cout << "You have no more trips" << endl
-            << "Please renew your subscription" << endl;
+             << "Please renew your subscription" << endl;
         cout << "+-----------------------------------------------------------------------------+" << endl;
     }
 }
@@ -3224,15 +3468,15 @@ void wallet_dedcution(int selected_zone)
     {
         users[global_id].subscribiondetails.payment -= price;
         cout << "Your trip is successfully booked and " << price
-            << " L.E. is deducted " << endl
-            << "Your current balance is " << users[global_id].balance << endl
-            << "Your smart wallet holds " << users[global_id].subscribiondetails.payment << "L.E." << endl;
+             << " L.E. is deducted " << endl
+             << "Your current balance is " << users[global_id].balance << endl
+             << "Your smart wallet holds " << users[global_id].subscribiondetails.payment << "L.E." << endl;
     }
     else
     {
         cout << "Your current balance is " << users[global_id].balance << endl
-            << "Your smart wallet holds " << users[global_id].subscribiondetails.payment << "L.E." << endl
-            << "Please Recharge and Try again" << endl;
+             << "Your smart wallet holds " << users[global_id].subscribiondetails.payment << "L.E." << endl
+             << "Please Recharge and Try again" << endl;
         user_main_menu();
     }
 }
@@ -3259,7 +3503,7 @@ void check_out(int answer, int selected_zone)
                     wallet_dedcution(selected_zone);
                 }
                 ++ride_freq_entry[start_station];
-				++ride_freq_exit[end_station];
+                ++ride_freq_exit[end_station];
 
                 // Redirect based on role
                 if (arr_user[global_id].role == 'U')
@@ -3319,7 +3563,7 @@ void trip_not_valid(int start, int end_station, int end_line, int start_line, in
 
             // leave the rest of the line
             cin.ignore(numeric_limits<streamsize>::max(),
-                '\n');
+                       '\n');
 
             // Ask the user to enter a valid int number only
             cout << "Wrong input,";
@@ -3346,33 +3590,41 @@ void system_ride()
     // initialize_users();
     start_calc(start_station, end_station, end_line, start_line, answer);
 }
-void History_Shift_Handling(bool opperation, int pos) {  // 1 adding     0 removing
-    if (opperation == 1) {
-        if (start_station > pos && end_station > pos) {
+void History_Shift_Handling(bool opperation, int pos)
+{ // 1 adding     0 removing
+    if (opperation == 1)
+    {
+        if (start_station > pos && end_station > pos)
+        {
             start_station++;
             end_station++;
         }
-        else if (start_station > pos) {
+        else if (start_station > pos)
+        {
             start_station++;
         }
-        else if (end_station > pos) {
+        else if (end_station > pos)
+        {
             end_station++;
         }
     }
-	else {
-		if (start_station > pos && end_station > pos) {
-			start_station--;
-			end_station--;
-		}
-		else if (start_station > pos) {
-			start_station--;
-		}
-		else if (end_station > pos) {
-			end_station--;
-		}
-	}
+    else
+    {
+        if (start_station > pos && end_station > pos)
+        {
+            start_station--;
+            end_station--;
+        }
+        else if (start_station > pos)
+        {
+            start_station--;
+        }
+        else if (end_station > pos)
+        {
+            end_station--;
+        }
+    }
 }
-
 
 #pragma endregion
 
@@ -3419,21 +3671,22 @@ void statistics()
     cout << "Genral plan : " << numberofsub[2] << " Persons\n";
     cout << "the common plan type people subscribe to is" << " ";
 
-    if (numberofsub[(max_element(ride_freq_entry, ride_freq_entry + 1000) - numberofsub)] == 0) {
+    if (numberofsub[(max_element(ride_freq_entry, ride_freq_entry + 1000) - numberofsub)] == 0)
+    {
         cout << "Scholar plan" << '\n';
     }
-    else if (numberofsub[(max_element(ride_freq_entry, ride_freq_entry + 1000) - numberofsub)] == 1) {
+    else if (numberofsub[(max_element(ride_freq_entry, ride_freq_entry + 1000) - numberofsub)] == 1)
+    {
         cout << "General plan" << '\n';
     }
-    else if (numberofsub[(max_element(ride_freq_entry, ride_freq_entry + 1000) - numberofsub)] == 2) {
+    else if (numberofsub[(max_element(ride_freq_entry, ride_freq_entry + 1000) - numberofsub)] == 2)
+    {
         cout << "Smart Wallet" << '\n';
     }
 
-
-        cout << "the most Entered station is " << stations[(max_element(ride_freq_entry, ride_freq_entry + 1000) - ride_freq_entry) - 1] << '\n';
-        cout << "the most Exit station is " << stations[(max_element(ride_freq_exit, ride_freq_exit + 1000) - ride_freq_exit) - 1] << '\n';
-        cout << "The number of trips is " << numberf_of_trips << '\n';
-
+    cout << "the most Entered station is " << stations[(max_element(ride_freq_entry, ride_freq_entry + 1000) - ride_freq_entry) - 1] << '\n';
+    cout << "the most Exit station is " << stations[(max_element(ride_freq_exit, ride_freq_exit + 1000) - ride_freq_exit) - 1] << '\n';
+    cout << "The number of trips is " << numberf_of_trips << '\n';
 }
 void changed_subscription_history(int id)
 {
@@ -3491,248 +3744,10 @@ void read_statistics()
 
 #pragma endregion
 
-void add_station(int& line_size, string arr[])
-{
-    cout << "At which position do you want to add a station" << '\n';
-    int pos_new_station;
-    cin >> pos_new_station;
-
-    // Shift elements in arr to make space for the new station
-    for (int i = number_of_stations; i > pos_new_station-1; i--)
-    {
-        stations[i] = stations[i - 1];
-    }
-
-    cout << "Enter a name for the added station" << endl;
-    string new_station_name;
-    cin.ignore();
-    getline(cin, new_station_name);
-    arr[pos_new_station - 1] = new_station_name;
-    ++line_size;
-
-    // Update Rod_axis_station if necessary
-    if (pos_new_station <= Rod_axis_station)
-    {
-        ++Rod_axis_station;
-    }
-        ++number_of_stations;
-
-    // Update line indices
-    if (pos_new_station <= end_line1 && pos_new_station >= start_line1)
-    {
-        ++Al_Shohadaa_line2;
-        ++Attaba_line2;
-        ++Attaba_line3;
-        ++Nasser_line3;
-        ++start_line2;
-        ++start_line3;
-        ++end_line2;
-        ++end_line3;
-        kit_kat_1_station++;
-        kit_kat_2_station++;
-		History_Shift_Handling(1, pos_new_station);
-
-        if (pos_new_station < Al_Shohadaa_line1)
-        {
-            ++Al_Shohadaa_line1;
-            ++Nasser_line1;
-            ++end_line1;
-        }
-        else if (pos_new_station < Nasser_line1 && pos_new_station > Al_Shohadaa_line1)
-        {
-            ++Nasser_line1;
-            ++end_line1;
-        }
-        else
-        {
-            ++end_line1;
-        }
-    }
-    else if (pos_new_station <= end_line2 && pos_new_station >= start_line2)
-    {
-        ++Attaba_line3;
-        ++Nasser_line3;
-        ++end_line3;
-        ++start_line3;
-        kit_kat_1_station++;
-        kit_kat_2_station++;
-		start_station++;
-		History_Shift_Handling(1, pos_new_station);
-        if (start_station > pos_new_station)
-            start_station++;
-        if (pos_new_station < Al_Shohadaa_line2)
-        {
-            ++Al_Shohadaa_line2;
-            ++Attaba_line2;
-            ++end_line2;
-        }
-        else if (pos_new_station < Attaba_line2)
-        {
-            ++Attaba_line2;
-            ++end_line2;
-        }
-        else
-        {
-            ++end_line2;
-        }
-    }
-    else if (pos_new_station <= end_line3 && pos_new_station >= start_line3)
-    {
-        ++end_line3;
-        kit_kat_1_station++;
-        kit_kat_2_station++;
-		start_station++;
-        History_Shift_Handling(1, pos_new_station);
-        if (start_station > pos_new_station)
-            start_station++;
-        if (pos_new_station < Attaba_line3)
-        {
-            ++Attaba_line3;
-            ++Nasser_line3;
-        }
-        else if (pos_new_station < Nasser_line3)
-        {
-            ++Nasser_line3;
-        }
-    }
-
-    cout << '\n';
-    for (int i = 0; i < line_size; i++)
-    {
-        cout << stations[i] << endl;
-    }
-    cout << "\nyou added this station : " << new_station_name << '\n';
-}
-void remove_station(int& line_size, string arr_remove[])
-{
-    while (true)
-    {
-        cout << "which position do you want to remove a station" << '\n';
-        int pos_removed_station;
-        cin >> pos_removed_station;
-
-        if (!(pos_removed_station == Nasser_line3 || pos_removed_station == Nasser_line1 ||
-            pos_removed_station == Attaba_line3 || pos_removed_station == Attaba_line2 ||
-            pos_removed_station == Al_Shohadaa_line2 || pos_removed_station == Al_Shohadaa_line1))
-        {
-            string removedsation = stations[pos_removed_station - 1];
-            for (int i = pos_removed_station - 1; i < number_of_stations-1; ++i)
-            {
-                stations[i] = stations[i + 1];
-            }
-
-			--number_of_stations;
-
-#if 1
-
-            if (pos_removed_station <= end_line1 && pos_removed_station >= start_line1)
-            {
-                
-                --Al_Shohadaa_line2;
-                --Attaba_line2;
-                --Attaba_line3;
-                --Nasser_line3;
-                --start_line2;
-                --start_line3;
-                --end_line2;
-                --end_line3;
-                --end_line1;
-				kit_kat_1_station--;
-				kit_kat_2_station--;
-                History_Shift_Handling(0, pos_removed_station);
-                if (pos_removed_station < Al_Shohadaa_line1)
-                {
-                    --Al_Shohadaa_line1;
-                    --Nasser_line1;
-            
-                }
-                else if (pos_removed_station < Nasser_line1 && pos_removed_station > Al_Shohadaa_line1)
-                {
-                    --Nasser_line1;
-                   
-                }
-              
-            }
-            else if (pos_removed_station <= end_line2 && pos_removed_station >= start_line2)
-            {
-                --Attaba_line3;
-                --Nasser_line3;
-                --end_line3;
-                --start_line3;
-                kit_kat_1_station--;
-                kit_kat_2_station--;
-                History_Shift_Handling(0, pos_removed_station);
-                if (pos_removed_station < Al_Shohadaa_line2)
-                {
-                    --Al_Shohadaa_line2;
-                    --Attaba_line2;
-                    --end_line2;
-                }
-                else if (pos_removed_station < Attaba_line2)
-                {
-                    --Attaba_line2;
-                    --end_line2;
-                }
-                else
-                {
-                    --end_line2;
-                }
-            }
-            else if (pos_removed_station <= end_line3 && pos_removed_station >= start_line3)
-            {
-                --end_line3;
-                kit_kat_1_station--;
-                kit_kat_2_station--;
-                History_Shift_Handling(0, pos_removed_station);
-                if (pos_removed_station < Attaba_line3)
-                {
-                    --Attaba_line3;
-                    --Nasser_line3;
-                }
-                else if (pos_removed_station < Nasser_line3)
-                {
-                    --Nasser_line3;
-                }
-            }
-#endif
-            cout << '\n';
-            for (int i = 0; i < number_of_stations; i++)
-            {
-                cout << stations[i] << endl;
-            }
-            cout << "\nthe removed station is : " << removedsation << '\n';
-            break;
-        }
-        else
-        {
-            cout << "you can not remove transaction station\n";
-        }
-    }
-}
-
-void edit(int line_size, string global_line[])
-{
-    int number;
-    cout << "enter which station you want to change it is name : ";
-    cin >> number;
-    cout << '\n';
-    string currentname = stations[number - 1];
-    cin.ignore();
-    cout << "the ned name of the station : ";
-    getline(cin, stations[number - 1]);
-    cout << '\n';
-    for (int i = 0; i < number_of_stations; i++)
-    {
-        cout << stations[i] << '\n';
-    }
-    cout << "\nyou changed the name of station from " << currentname << " into " << stations[number - 1] << '\n';
-}
-
 int main()
 {
     restore_the_data_of_user_and_admin();
     read_statistics();
-
     cout << "Welcome to Cairo metro app \n";
     start_menu();
     storage_the_data_of_user_and_admin();
