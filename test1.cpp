@@ -7,47 +7,65 @@
 #include <limits>
 #include <algorithm>
 
+using namespace std;
 #pragma region defined constants
 #define number_of_users_and_admin 1001
 #define n 1
 
-#define kit_kat_1_station 78 // Kit Kat to Rod El Farag
-#define kit_kat_2_station 85 // Kit Kat to Cairo University
-#define Rod_axis_station 84
-#define start_line1 1
-#define end_line1 35
-#define start_line2 36
-#define end_line2 55
-#define start_line3 56
-#define end_line3 89
-#define Al_Shohadaa_line1 14
-#define Al_Shohadaa_line2 43
-#define Attaba_line2 44
-#define Attaba_line3 74
-#define Nasser_line1 16
-#define Nasser_line3 75
-#define stations_of_Rod_branch 6
 #pragma endregion
 
-int start_station = 0, end_station = 0, count = 0;
-int start_line = 0, end_line = 0, answer = 0;
-using namespace std;
+int kit_kat_1_station = 78; // Kit Kat to Rod El Farag
+int kit_kat_2_station = 85; // Kit Kat to Cairo University
+int Rod_axis_station = 84;
+int start_line1 = 1;
+int end_line1 = 35;
+int start_line2 = 36;
+int end_line2 = 55;
+int start_line3 = 56;
+int end_line3 = 89;
+int Al_Shohadaa_line1 = 14;
+int Al_Shohadaa_line2 = 43;
+int Attaba_line2 = 44;
+int Attaba_line3 = 74;
+int Nasser_line1 = 16;
+int Nasser_line3 = 75;
+int stations_of_Rod_branch = 6;
+int line1_size = 35, line2_size = 20, line3_size = 23;
 
 #pragma region Global variables, Arrays & Structs
+
+void initializeLocalTime(tm &localTime, time_t &now)
+{
+    now = time(0);
+    if (localtime_s(&localTime, &now) != 0)
+    {
+        cerr << "Error: Failed to get local time." << endl;
+        exit(EXIT_FAILURE);
+    }
+}
+
+// Global Variables
+int start_station = 0, end_station = 0, count = 0;
+int start_line = 0, end_line = 0, answer = 0;
+int numberf_of_trips = 0;
 int id;
 int temp_register_or_login;
 char role;
-bool suceess = false;                          // to solve the problem of printing
-bool isUnique[number_of_users_and_admin] = {}; // frequency array to check if the id exist or not
+bool suceess = false;                          // To solve the problem of printing
+bool isUnique[number_of_users_and_admin] = {}; // Frequency array to check if the ID exists or not
 int global_id;
-bool subscipetion_or_not[number_of_users_and_admin]{}; // to check if the user has a subscription or not
+bool subscipetion_or_not[number_of_users_and_admin] = {}; // To check if the user has a subscription or not
+int Zone1_price = 8, Zone2_price = 10, Zone3_price = 15, Zone4_price = 20;
+int New_Zone1_price, New_Zone2_price, New_Zone3_price, New_Zone4_price;
 char previoussub[4];
 int ride_freq_entry[90] = {};
 int ride_freq_exit[90] = {};
 int numberofsub[3];
 int maximumage[150] = {};
+
+// Global Arrays
 string stationss[90] = {
-    "", // index 0 is left empty for 1-based indexing
+    "", // Index 0 is left empty for 1-based indexing
     "New El-Marg", "El-Marg", "Ezbet El-Nakhl", "Ain Shams", "El-Matareyya", "Helmeyet El-Zaitoun",
     "Hadayeq El-Zaitoun", "Saray El-Qobba", "Hammamat El-Qobba", "Kobri El-Qobba", "Manshiet El-Sadr",
     "El-Demerdash", "Ghamra", "Al-Shohadaa", "Orabi", "Nasser", "Sadat", "Saad Zaghloul",
@@ -64,15 +82,32 @@ string stationss[90] = {
     "El-Bohy", "Al-Qawmeya Al-Arabiya", "Ring Road", "Rod al-Farag Axis", "El-Tawfikeya",
     "Wadi El-Nil", "Gamaat El Dowal", "Bulaq El-Dakroor", "Cairo University"};
 
-void initializeLocalTime(tm &localTime, time_t &now)
-{
-    now = time(0);
-    if (localtime_s(&localTime, &now) != 0)
-    {
-        cerr << "Error: Failed to get local time." << endl;
-        exit(EXIT_FAILURE);
-    }
-}
+string stations[85] = {
+    "New Marg", "El-Marg", "Ezbet El-Nakhl", "Ain Shams", "El-Matareyya",
+    "Helmeyet El-Zaitoun", "Hadayeq El-Zaitoun", "Saray El-Qobba", "Hammamat El-Qobba", "Kobri El-Qobba",
+    "Manshiet El-Sadr", "El-Demerdash", "Ghamra", "Al-Shohadaa", "Orabi", "Nasser", "Sadat", "Saad Zaghloul",
+    "Al-Sayeda Zeinab", "El-Malek El-Saleh", "Mar Girgis", "El-Zahraa", "Dar El-Salam", "Hadayek El-Maadi",
+    "Maadi", "Sakanat El-Maadi", "Tora El-Balad", "Kozzika", "Tura El-Esmant", "Elmaasara", "Hadayek Helwan",
+    "Wadi Hof", "Helwan University", "Ain Helwan", "Helwan", "Shubra El-Khaimah", "Koliet El-Zeraa", "Mezallat",
+    "Khalafawy", "St. Teresa", "Rod El-Farag", "Masarra", "Al-Shohadaa", "Attaba", "Mohamed Naguib", "Sadat",
+    "Opera", "Dokki", "El Bohoth", "Cairo University", "Faisal", "Giza", "Omm El-Masryeen", "Sakiat Mekky",
+    "El Monib", "Adly Mansour", "Haykestep", "Omar Ibn El Khattab", "Qubaa", "Hesham Barakat", "El-Nozha",
+    "El-Shams Club", "Alf Maskan", "Heliopolis", "Haroun", "Al-Ahram", "Koleyet El-Banat", "Stadium", "Fair Zone",
+    "Abbassiya", "Abdou Pasha", "El-Geish", "Bab El Shaariya", "Attaba", "Nasser", "Maspero", "Safaa Hijazy", "Kit-Kat"};
+
+string zone_1[8] = {"Al-Shohadaa", "Attaba", "Mohamed Naguib", "Sadat", "Opera", "Nasser", "Saad Zaghloul", "Orabi"};
+string zone_2[5] = {"Al-Sayeda Zeinab", "El-Malek El-Saleh", "Mar Girgis", "El-Zahraa", "Dar El-Salam"};
+string zone_3[8] = {"El Monib", "Sakiat Mekky", "Omm El-Masryeen", "Giza", "Faisal", "Cairo University", "El Bohoth", "Dokki"};
+string zone_4[8] = {"Al-Ahram", "Koleyet El-Banat", "Stadium", "Fair Zone", "Abbassiya", "Abdou Pasha", "El-Geish", "Bab El Shaariya"};
+string zone_5[6] = {"Saray El-Qobba", "Hammamat El-Qobba", "Kobri El-Qobba", "Manshiet El-Sadr", "El-Demerdash", "Ghamra"};
+string zone_6[8] = {"Shubra El-Khaimah", "Koliet El-Zeraa", "Mezallat", "Khalafawy", "St. Teresa", "Rod El-Farag", "Masarra"};
+string zone_7[6] = {"Hadayek El-Maadi", "Maadi", "Sakanat El-Maadi", "Tora El-Balad", "Kozzika", "Tura El-Esmant"};
+string zone_8[7] = {"New Marg", "El-Marg", "Ezbet El-Nakhl", "Ain Shams", "El-Matareyya", "Helmeyet El-Zaitoun", "Hadayeq El-Zaitoun"};
+string zone_9[6] = {"Elmaasara", "Hadayek Helwan", "Wadi Hof", "Helwan University", "Ain Helwan", "Helwan"};
+string zone_10[10] = {"Adly Mansour", "Haykestep", "Omar Ibn El Khattab", "Qubaa", "Hesham Barakat", "El-Nozha", "El-Shams Club", "Alf Maskan", "Heliopolis", "Haroun"};
+string zone_11[14] = {"Maspero", "Safaa Hijazy", "Kit-Kat", "Sudan", "Imbaba", "El-Bohy", "Al-Qawmeya Al-Arabiya", "Ring Road", "Rod al-Farag Axis", "El-Tawfikeya", "Wadi El-Nil", "Gamaat El Dowal Al-Arabiya", "Bulaq El-Dakroor", "Cairo University"};
+
+// Struct Definitions
 struct date
 {
     int day;
@@ -80,7 +115,8 @@ struct date
     int year;
     int hour;
     int minute;
-} date_of_the_regestration; // struct to store the date of the ticket
+} ride_date;
+
 struct activationDate
 {
     int day;
@@ -96,14 +132,15 @@ struct activationDate
         month = localTime.tm_mon + 1;
         year = localTime.tm_year + 1900;
     }
+};
 
-}; // struct to store the date of the ticket
 struct expiryDate
 {
     int day = 0;
     int month = 0;
     int year = 0;
 };
+
 struct user_and_admin_struct
 {
     char role;
@@ -111,10 +148,9 @@ struct user_and_admin_struct
     int id;
     string password;
     char subscription_type;
-    double balance;
     int age;
+} arr_user[number_of_users_and_admin];
 
-} arr_user[number_of_users_and_admin]; // array of struct to store the data of user
 struct subscription
 {
     char planType;
@@ -124,6 +160,7 @@ struct subscription
     string zones;
     int payment = 0;
 };
+
 struct user_struct
 {
     string name = "";
@@ -133,44 +170,38 @@ struct user_struct
     int zone;
     subscription subscribiondetails;
 } users[number_of_users_and_admin];
-string stations[85] = {"New Marg", "El-Marg",
-                       "Ezbet El-Nakhl", "Ain Shams", "El-Matareyya",
-                       "Helmeyet El-Zaitoun", "Hadayeq El-Zaitoun",
-                       "Saray El-Qobba", "Hammamat El-Qobba", "Kobri El-Qobba",
-                       "Manshiet El-Sadr", "El-Demerdash", "Ghamra", "Al-Shohadaa",
-                       "Orabi", "Nasser", "Sadat", "Saad Zaghloul", "Al-Sayeda Zeinab",
-                       "El-Malek El-Saleh", "Mar Girgis", "El-Zahraa", "Dar El-Salam",
-                       "Hadayek El-Maadi", "Maadi", "Sakanat El-Maadi", "Tora El-Balad",
-                       "Kozzika", "Tura El-Esmant", "Elmaasara", "Hadayek Helwan", "Wadi Hof",
-                       "Helwan University", "Ain Helwan", "Helwan", "Shubra El-Khaimah",
-                       "Koliet El-Zeraa", "Mezallat", "Khalafawy", "St. Teresa", "Rod El-Farag",
-                       "Masarra", "Al-Shohadaa", "Attaba", "Mohamed Naguib", "Sadat", "Opera",
-                       "Dokki",
-                       "El Bohoth", "Cairo University", "Faisal", "Giza", "Omm El-Masryeen",
-                       "Sakiat Mekky",
-                       "El Monib", "Adly Mansour", "Haykestep", "Omar Ibn El Khattab",
-                       "Qubaa", "Hesham Barakat", "El-Nozha", "El-Shams Club", "Alf Maskan",
-                       "Heliopolis",
-                       "Haroun", "Al-Ahram", "Koleyet El-Banat", "Stadium", "Fair Zone", "Abbassiya",
-                       "Abdou Pasha",
-                       "El-Geish", "Bab El Shaariya",
-                       "Attaba", "Nasser", "Maspero", "Safaa Hijazy", "Kit-Kat"};
-string zone_3[8] = {"El Monib", "Sakiat Mekky", "Omm El-Masryeen", "Giza", "Faisal", "Cairo University", "El Bohoth", "Dokki"};
-string zone_1[8] = {"Al-Shohadaa", "Attaba", "Mohamed Naguib", "Sadat", "Opera", "Nasser", "Saad Zaghloul", "Orabi"};
-string zone_2[5] = {"Al-Sayeda Zeinab", "El-Malek El-Saleh", "Mar Girgis", "El-Zahraa", "Dar El-Salam"};
-string zone_7[6] = {"Hadayek El-Maadi", "Maadi", "Sakanat El-Maadi", "Tora El-Balad", "Kozzika", "Tura El-Esmant"};
-string zone_9[6] = {"Elmaasara", "Hadayek Helwan", "Wadi Hof", "Helwan University", "Ain Helwan", "Helwan"};
-string zone_6[8] = {"Shubra El-Khaimah", "Koliet El-Zeraa", "Mezallat", "Khalafawy", "St. Teresa", "Rod El-Farag", "Masarra"};
-string zone_11[14] = {"Maspero", "Safaa Hijazy", "Kit-Kat", "Sudan", "Imbaba", "El-Bohy", "Al-Qawmeya Al-Arabiya", "Ring Road", "Rod al-Farag Axis", "El-Tawfikeya", "Wadi El-Nil", "Gamaat El Dowal Al-Arabiya", "Bulaq El-Dakroor", "Cairo University"};
-string zone_5[6] = {"Saray El-Qobba", "Hammamat El-Qobba", "Kobri El-Qobba", "Manshiet El-Sadr", "El-Demerdash", "Ghamra"};
-string zone_8[7] = {"New Marg", "El-Marg", "Ezbet El-Nakhl", "Ain Shams", "El-Matareyya", "Helmeyet El-Zaitoun", "Hadayeq El-Zaitoun"};
-string zone_4[8] = {"Al-Ahram", "Koleyet El-Banat", "Stadium", "Fair Zone", "Abbassiya", "Abdou Pasha", "El-Geish", "Bab El Shaariya"};
-string zone_10[10] = {"Adly Mansour", "Haykestep", "Omar Ibn El Khattab", "Qubaa", "Hesham Barakat", "El-Nozha", "El-Shams Club", "Alf Maskan", "Heliopolis", "Haroun"};
+
+struct ride_struct
+{
+    int ride_id;
+    int start_station;
+    int end_station;
+    tm ride_date;
+} rides[number_of_users_and_admin];
+struct Ride_history
+{
+    ride_struct ride_of_user[1000];
+
+} RideHistory[number_of_users_and_admin];
+
+struct subscription_prices
+{
+    int scholer[4] = {150, 200, 250, 300};
+    int new_scholer[4];
+    int oneMonth_general[4] = {310, 365, 425, 600};
+    int new_oneMonth_general[4];
+    int oneYear_general[4] = {3500, 4000, 4500, 5000};
+    int new_oneYear_general[4];
+} subs_prices;
 
 #pragma endregion
 
 #pragma region function decleared
+// Utility Functions
+void initializeLocalTime(tm &localTime, time_t &now);
+
 // Sign-in, Registration & Admin Capabilities
+bool check_name_has_int(string name);
 string hidding_password_write(string &password);
 string strong_pass();
 bool check_if_id_unique(int id);
@@ -181,13 +212,13 @@ void restore_the_data_of_user_and_admin();
 void view_all_accounts();
 void modifying_account(int ID = 0);
 void delete_account();
-void check_choice(int &choice);
+void Admin_Subscriptions_prices_control();
 void user_main_menu();
+void admin_main_menu();
 void login_form();
 char exit_or_not();
 
 // Subscriptions
-void menu();
 void user_data_entry();
 void zoneselection(int &numberofstations);
 void subscriptiondataentry(int num);
@@ -199,12 +230,18 @@ void editPersonalData();
 void viewSubscriptionPlan();
 void renewSubscriptionPlan();
 void changeSubscriptionPlan();
-void system_function();
+void subscriptions_for_registration();
+void subscription_system_for_user_main_menu();
+int zone_to_price(int selected_zone);
+void changing_price_for_zones__menu();
+void changing_prices_for_zones_for_zones_for_zones_for_zones_for_zones();
 
 // Rides
+
+void enter_endline();
 void enter_startline();
 void enter_endline();
-int choose_line(int line_num, int station_num);
+int choose_line(int &line_num, int &station_num);
 void input_start_data(int &start_line, int &start);
 void input_end_data(int &end_line, int &end_station);
 void start_loop_odd_cases(int i, int &start, int &end_station, int trans1, int trans2, string arr[]);
@@ -240,19 +277,24 @@ void zone_checker(string stations[], int &current_zone, int i, int &zone_counter
 int station_to_zone(int numberofstations);
 int string_to_int_zone();
 bool zone_to_zone_check(int selected_zone);
-int zone_to_price(int selected_zone);
 void trips_deduction_general_or_scholar();
 void check_out(int answer, int selected_zone);
 void wallet_dedcution(int selected_zone);
 void trip_not_valid(int start, int end_station, int end_line, int start_line, int answer);
 void system_ride();
+void record_ride();
+void output_History_user_version();
+void output_History_admin_version();
+void remove_station(int &line_size, string arr_remove[]);
+void add_station(int &line_size, string arr[]);
+void edit(int line_size, string global_line[]);
 
 // History & Statistics
+void System_History();
 void statistics();
-void user_history(int id);
+void changed_subscription_history(int id);
 void storage_the_data_of_statistics();
 void read_statistics();
-
 #pragma endregion
 
 #pragma region signin,Registration & Admin capabilities
@@ -295,14 +337,15 @@ void start_menu()
 }
 
 string hidding_password_write(string &password)
-{ // This function to hide the password
-
+{
     string hidden_password = "";
     char ch;
+    time_t start_time, current_time;
+
     while ((ch = _getch()) != '\r') // getch() to get the character without echoing it
     {
         if (ch == '\b')
-        { // if the user press backspace
+        { // if the user presses backspace
             if (!hidden_password.empty())
             {
                 hidden_password.pop_back(); // remove the last character
@@ -311,8 +354,11 @@ string hidding_password_write(string &password)
         }
         else
         {
-            cout << '*';           // print * instead of the character
+            cout << ch;            // temporarily display the character
             hidden_password += ch; // add the character to the string
+
+            // Start a timer to replace the character with '*' after 10 seconds
+            cout << "\b \b*"; // replace the character with '*'
         }
     }
     cout << '\n';
@@ -370,6 +416,18 @@ bool check_if_id_unique(int id)
     }
 }
 
+bool check_name_has_int(string name)
+{
+    for (char c : name)
+    {
+        if (isdigit(c))
+        { // Check if the character is a digit
+            return true;
+        }
+    }
+    return false;
+}
+
 void Base_regiseter_to_user_or_admin()
 {
     int id;
@@ -378,6 +436,14 @@ void Base_regiseter_to_user_or_admin()
     cin.ignore();
     getline(cin, name);
 
+    while (check_name_has_int(name) == true)
+    {
+        cout << "your name mustn't have a int value\n";
+        cout << "Please Enter your Name \n";
+        getline(cin, name);
+        if (check_name_has_int(name) == false)
+            break;
+    }
     cout << "Please Enter your ID \n";
     cin >> id;
 
@@ -435,7 +501,6 @@ void register_form()
         cin.clear();
         cin.ignore();
         cout << "You have entered a invalid type \nPlease enter char\n";
-
         cin >> role;
     }
     role = toupper(role);
@@ -448,12 +513,12 @@ void register_form()
         role = toupper(role);
     }
 
-    if (role == 'U')
+    if (role == 'U' || role == 'u')
     {
         Base_regiseter_to_user_or_admin();
-        system_function();
+        subscriptions_for_registration();
     }
-    else if (role == 'A')
+    else if (role == 'A' || role == 'a')
     {
         Base_regiseter_to_user_or_admin();
         suceess = 0;
@@ -603,19 +668,27 @@ void view_all_accounts()
             cout << "------------\n";
         }
     }
+
     if (!has_accounts)
         cout << "No accounts found.\n";
+    cout << "Press 1 for MAIN MENU: ";
+    int c;
+    cin >> c;
+    while (cin.fail() && c != 1)
+    {
+        cout << "Press 1 only for MAIN MENU: ";
+        cin >> c;
+    }
+    admin_main_menu();
 }
 
 void modifying_account(int ID)
 {
     while (true)
     {
-        int id = ID;
-        if (ID == 0)
+        if (arr_user[global_id].role == 'A')
         {
             cout << "Please Enter the ID of the account you want to modify\n";
-
             cin >> id;
         }
         char again;
@@ -624,11 +697,28 @@ void modifying_account(int ID)
         {
             do
             {
-                cout << "what you want to change (n) for name (p) for password (s) for subscription\n";
+                cout << "Select what to modify?\n";
+                cout << "n for name\n";
+                cout << "p for password\n";
+                cout << "b for balance\n";
+                if (arr_user[global_id].role == 'A')
+                {
+                    cout << "e for modifing another account\n";
+                }
+                cout << "M to go back to the MAIN MENU\n";
+                cout << "Enter a letter: ";
                 cin >> modify;
                 modify = tolower(modify);
                 switch (modify)
                 {
+                case 'e':
+                    if (arr_user[global_id].role == 'A')
+                    {
+                        cout << "Please Enter the ID of the account you want to modify\n";
+                        cin >> id;
+                    }
+                    modifying_account(id);
+
                 case 'n':
                     cout << "Please Enter the new name\n";
                     cin.ignore();
@@ -638,26 +728,42 @@ void modifying_account(int ID)
                         cin.clear();
                         cin.ignore();
                         getline(cin, arr_user[id].name);
+                        cout << "Successful Modification\n";
                     }
                     break;
                 case 'p':
                     cout << "Please Enter the new password\n";
                     hidding_password_write(arr_user[id].password);
+                    arr_user[global_id].password = hidding_password_write(arr_user[id].password);
+                    cout << "Successful Modification\n";
                     break;
-                case 's':
-                    cout << "Please Enter the new subscription type (s)(g)(w)\n";
-                    cin >> arr_user[id].subscription_type;
-                    arr_user[id].subscription_type = tolower(arr_user[id].subscription_type);
-                    while (cin.fail() || (arr_user[id].subscription_type != 'g' && arr_user[id].subscription_type != 'w' && arr_user[id].subscription_type != 's'))
+                case 'b':
+                    cout << "Please Enter the new balance\n";
+                    cin >> users[id].balance;
+                    while (cin.fail())
                     {
                         cin.clear();
                         cin.ignore();
-                        cin >> arr_user[id].subscription_type;
+                        cout << "enter a digit\n";
+                        cin >> users[id].balance;
+                        cout << "Successful Modification\n";
+                    }
+                    break;
+                case 'm':
+                    cout << "going back to the main menu\n";
+                    if (arr_user[global_id].role == 'U')
+                    {
+                        user_main_menu();
+                    }
+                    else if (arr_user[global_id].role == 'A')
+                    {
+                        admin_main_menu();
                     }
                     break;
                 default:
                     cout << "invalid input\n";
                 }
+
                 cout << "want to modify something else(y/n)\n";
                 cin >> again;
                 again = tolower(again);
@@ -665,9 +771,6 @@ void modifying_account(int ID)
         }
         else
             cout << "user doesn't exist\n";
-
-        cout << "The account has been modified successfully\n";
-        break;
     }
 }
 
@@ -684,38 +787,115 @@ void delete_account()
         arr_user[id].password = "";
         arr_user[id].role = ' ';
         arr_user[id].subscription_type = ' ';
-        arr_user[id].balance = 0;
+        users[id].balance = 0;
 
         cout << "The account has been deleted successfully\n";
+        isUnique[id] = 0;
     }
     else
         cout << "user doesn't exist\n";
+    cout << "Press 1 for MAIN MENU: ";
+    int c;
+    cin >> c;
+    while (cin.fail() && c != 1)
+    {
+        cout << "Press 1 only for MAIN MENU: ";
+        cin >> c;
+    }
+    admin_main_menu();
 }
 
-void check_choice(int &choice)
+void Admin_Subscriptions_prices_control()
 {
-    while (cin.fail() || (choice != 1 && choice != 2 && choice != 3))
+    cout << "Which plan do you want to edit?\nPress 1 for scholer pass\nPress 2 for general pass\n";
+    int choice;
+    cin >> choice;
+    while (cin.fail() || choice < 1 || choice > 2)
     {
         cin.clear();
-        cin.ignore();
-        cout << "enter a digit 1 or 2 or 3\n";
+        cin.ignore(10000, '\n');
+        cout << "Invalid choice! Please enter 1 or 2: \n";
         cin >> choice;
     }
+    if (choice == 1)
+    {
+        cout << "Enter the new prices for the scholer pass\n";
+        for (int i = 0; i < 4; i++)
+        {
+            cout << "Enter the price for zone " << i + 1 << ": ";
+            cin >> subs_prices.scholer[i];
+            while (cin.fail())
+            {
+                cin.clear();
+                cin.ignore(10000, '\n');
+                cout << "Invalid input! Please enter a valid price: ";
+                cin >> subs_prices.scholer[i];
+            }
+        }
+    }
+    else if (choice == 2)
+    {
+        cout << "Press 1 for one month plan\nPress 2 for one year\n";
+        int ans;
+        cin >> ans;
+        while (cin.fail() || ans < 1 || ans > 2)
+        {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "Invalid choice! Please enter 1 or 2\nPress 1 for one month plan\nPress 2 for one year\n";
+            cin >> ans;
+        }
+        if (ans == 1)
+        {
+            cout << "Enter the new prices for the general pass\n";
+            for (int i = 0; i < 4; i++)
+            {
+                cout << "Enter the price for zone " << i + 1 << ": ";
+                cin >> subs_prices.new_oneMonth_general[i];
+                while (cin.fail())
+                {
+                    cin.clear();
+                    cin.ignore(10000, '\n');
+                    cout << "Invalid input! Please enter a valid price: ";
+                    cin >> subs_prices.new_oneMonth_general[i];
+                }
+            }
+        }
+        else if (ans == 2)
+        {
+            cout << "Enter the new prices for the general pass\n";
+            for (int i = 0; i < 4; i++)
+            {
+                cout << "Enter the price for zone " << i + 1 << ": ";
+                cin >> subs_prices.new_oneYear_general[i];
+                while (cin.fail())
+                {
+                    cin.clear();
+                    cin.ignore(10000, '\n');
+                    cout << "Invalid input! Please enter a valid price: ";
+                    cin >> subs_prices.new_oneYear_general[i];
+                }
+            }
+        }
+        else
+        {
+            cout << "Invalid choice!\n";
+        }
+    }
 }
-
 void user_main_menu()
 {
     while (true)
     {
         cout << "What do you want to do\npress 1 to go to subscription System \n";
         cout << "press 2 to Modify your account data\n";
-        cout << "press 3 to top up your balance\n";
-        cout << "press 4 to go ride\n";
-        cout << "press 5 to show history\n";
-        cout << "press 0 to log out\n";
+        cout << "press 3 to go ride\n";
+        cout << "press 4 to show history\n";
+        cout << "press 5 to log out\n";
+        cout << "Press 6 to terminate the system\n";
         int choicee;
         cin >> choicee;
-        while (cin.fail() || choicee < 1 || choicee > 5)
+        while (cin.fail() || choicee < 1 || choicee > 6)
         {
             cin.clear();
             cin.ignore(10000, '\n');
@@ -727,27 +907,13 @@ void user_main_menu()
             tm localTime;
             time_t now;
             initializeLocalTime(localTime, now);
-            system_function();
+            subscription_system_for_user_main_menu();
         }
         else if (choicee == 2)
         {
             modifying_account(id);
         }
         else if (choicee == 3)
-        {
-            int addon = 0;
-            cout << "Please Enter the the amount of money you want to top up your balance with\n";
-            cin >> addon;
-            while (cin.fail())
-            {
-                cin.clear();
-                cin.ignore();
-                cin >> addon;
-            }
-            users[id].balance += addon;
-            cout << "Now you balacnce = " << users[id].balance << '\n';
-        }
-        else if (choicee == 4)
         {
             if (subscipetion_or_not[global_id] == 0)
             {
@@ -756,7 +922,54 @@ void user_main_menu()
                 tm localTime;
                 time_t now;
                 initializeLocalTime(localTime, now);
-                system_function();
+                int option;
+                cout << "1. Buy Travel Plan" << '\n';
+                cout << "2. Back to Main Menu" << '\n';
+                cout << "Please select an option: ";
+                cin >> option;
+                switch (option)
+                {
+                case 1:
+                    if (subscipetion_or_not[global_id] == 0)
+                    {
+                        cout << "1. Scholar Pass\n2. General Pass\n3. Smart Wallet" << endl;
+                        cout << "Please enter the plan type: ";
+                        int num;
+                        cin >> num;
+                        while (num < 1 || num > 3)
+                        {
+                            cout << "Invalid option. Please enter a valid plan type:" << endl;
+                            cin >> num;
+                        }
+                        subscriptiondataentry(num);
+                        calculating_payment_and_expirydate();
+                        if (users[global_id].subscribiondetails.planType == 'G')
+                        {
+                            deductSubscriptionPayment();
+                            cout << "Your subscription has been successfully created!" << endl;
+                        }
+                        else if (users[global_id].subscribiondetails.planType == 'S')
+                        {
+                            deductSubscriptionPayment();
+                            cout << "Your subscription has been successfully created!" << endl;
+                        }
+                        else if (users[global_id].subscribiondetails.planType == 'W')
+                        {
+                            addFundsToSmartWallet();
+                            cout << "Your Smart Wallet has been successfully created!" << endl;
+                        }
+                        subscipetion_or_not[global_id] = 1; // Mark as subscribed
+                    }
+                    else
+                        cout << "you already subscriped.\n";
+                    break;
+                case 2:
+                    user_main_menu();
+                default:
+                    cout << "Invalid option! Please select a valid option." << endl;
+                }
+                cout << endl;
+                cout << "----------------------------------------" << endl;
             }
 
             while (subscipetion_or_not[global_id] == 1)
@@ -786,34 +999,119 @@ void user_main_menu()
                 }
             }
         }
-        else if (choicee == 5)
+        else if (choicee == 4)
         {
-            user_history(global_id);
+            output_History_user_version();
+            changed_subscription_history(global_id);
+            user_main_menu();
         }
-        else if (choicee == 0)
+        else if (choicee == 5)
         {
             start_menu();
         }
-
-        cout << "Do you want terminate The Program ?(y/n): ";
-        char choice;
-        cin >> choice;
-        choice = toupper(choice);
-        while (choice != 'Y' && choice != 'N')
+        else if (choicee == 6)
         {
-            cout << "Invalid choice! Please enter 'y' for Yes or 'n' for No: ";
-            cin >> choice;
-            choice = toupper(choice);
+            storage_the_data_of_user_and_admin();
+            storage_the_data_of_statistics();
+            exit(0);
         }
-        if (choice == 'Y')
+    }
+}
+
+void admin_main_menu()
+{
+    while (true)
+    {
+        cout << "What do you want to do\n";
+        cout << "press 1 to view all accounts \n";
+        cout << "press 2 to Modify account data\n";
+        cout << "press 3 to delete account\n";
+        cout << "press 4 to System History\n";
+        cout << "press 5 to system statistcs\n";
+        cout << "press 6 to Subscriptions & Zones prices Managment\n";
+        cout << "press 7 to modify stations\n";
+        cout << "Press 8 to log out\n";
+        cout << "Press 9 to terminate the system\n";
+        int choicee;
+        cin >> choicee;
+        while (cin.fail() || choicee < 1 || choicee > 9)
         {
-            break;
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "Invalid choice! Please enter from 1 to 9: \n";
+            cin >> choicee;
+        }
+        if (choicee == 1)
+        {
+            view_all_accounts();
+        }
+        else if (choicee == 2)
+        {
+            modifying_account(id);
+        }
+        else if (choicee == 3)
+        {
+            delete_account();
+        }
+        else if (choicee == 4)
+        {
+            output_History_admin_version();
+        }
+        else if (choicee == 5)
+        {
+            statistics();
+        }
+        else if (choicee == 6)
+        {
+            cout << "Press 1 to Edit Subscription\nPress 2 to Edit Zones control\n";
+            int choose;
+            cin >> choose;
+            while (cin.fail() || choose < 1 || choose > 2)
+            {
+                cin.clear();
+                cin.ignore(10000, '\n');
+                cout << "Invalid choice! Please enter from 1 to 2:\nPress 1 to Edit Subscription\nPress 2 to Edit Zones control\n";
+                cin >> choose;
+            }
+            if (choose == 1)
+            {
+                Admin_Subscriptions_prices_control();
+            }
+            else if (choose == 2)
+            {
+                changing_prices_for_zones_for_zones_for_zones_for_zones_for_zones();
+            }
+        }
+        else if (choicee == 7)
+        {
+            int choiceee;
+            cout << "choose 1 to add a station 2 to remove station 3 to edit station's name\n";
+            cin >> choiceee;
+            if (choiceee == 1)
+                add_station(line1_size, stations);
+            else if (choiceee == 2)
+                remove_station(line1_size, stations);
+            else if (choiceee == 3)
+                edit(line1_size, stations);
+            else
+                cout << "invalid number\n";
+        }
+        else if (choicee == 8)
+        {
+            start_menu();
+        }
+        else if (choicee == 9)
+        {
+            storage_the_data_of_user_and_admin();
+            storage_the_data_of_statistics();
+            exit(0);
         }
     }
 }
 
 void login_form()
 {
+    int itration = 0;
     while (true)
     {
         int id;
@@ -827,13 +1125,26 @@ void login_form()
             cin.ignore(10000, '\n');
             cout << "Invalid input! Please enter a valid ID (digits only): \n";
             cin >> id;
+            itration++;
+            if (itration > 2)
+            {
+                cout << "Trials error you Entered 3 times wrong id\n";
+                start_menu();
+            }
         }
 
         if (!isUnique[id])
         {
+            itration++;
             cout << "This ID does not exist! Please try again.\n";
+            if (itration > 2)
+            {
+                cout << "Trials error you Entered 3 times wrong id\n";
+                start_menu();
+            }
             continue;
         }
+
         global_id = id;
 
         cout << "Please Enter your password \n";
@@ -841,59 +1152,9 @@ void login_form()
 
         if (arr_user[id].role == 'A')
         {
-            while (true)
-            {
-                if (password == arr_user[id].password)
-                {
-
-                    cout << "\nYou have logged in successfully as Admin\n";
-                    cout << "Hello " << arr_user[id].name << endl;
-                    cout << "What do you want to do\npress 1 to modify certain account data\n";
-                    cout << "press 2 to delete certain account data\n";
-                    cout << "press 3 to view all accounts\n";
-                    cout << "press 4 to add subscription to certain account\n";
-                    cout << "press 5 to show statistics\n";
-                    cout << "press 0 to logout\n";
-                    int choice;
-                    cin >> choice;
-
-                    while (cin.fail() || choice < 0 || choice > 5)
-                    {
-                        cin.clear();
-                        cin.ignore(10000, '\n');
-                        cout << "Invalid choice! Please enter 1, 2, 3, 4 or 5: \n";
-                        cin >> choice;
-                    }
-
-                    if (choice == 1)
-                        modifying_account();
-
-                    else if (choice == 2)
-                        delete_account();
-
-                    else if (choice == 3)
-                        view_all_accounts();
-
-                    else if (choice == 4)
-                    {
-                        tm localTime;
-                        time_t now;
-                        initializeLocalTime(localTime, now);
-                        system_function();
-                    }
-                    else if (choice == 5)
-                    {
-                        statistics();
-                    }
-                    else if (choice == 0)
-                    {
-                        break;
-                    }
-                }
-                else
-                    cout << "Incorrect password for Admin! Please try again.\n";
-            }
+            admin_main_menu();
         }
+
         else if (arr_user[id].role == 'U')
         {
             if (password == arr_user[id].password)
@@ -924,10 +1185,293 @@ char exit_or_not()
     return exit;
 }
 
+void changing_price_for_zones__menu()
+{
+    int answer;
+    cout << "Which zone do you want to change it's price?\n";
+    cout << "Press 1 to change zone-1 price\nPress 2 to change zone-2 price\nPress 3 to change zone-3 price\nPress 4 to change zone-4 price\nor 0 to exit\n";
+    cin >> answer;
+    cout << "+-----------------------------------------------------------------------------+" << endl;
+    if (answer == 1)
+    {
+        do
+        {
+            cout << "enter your new price for this zone: ";
+            cin >> New_Zone1_price;
+            cout << "+-----------------------------------------------------------------------------+" << endl;
+
+            if (New_Zone1_price == Zone1_price)
+            {
+                cout << "it's already current price!\n";
+                cout << "Press 1 to enter another price\n2 to exit\n";
+                cin >> answer;
+                cout << "+-----------------------------------------------------------------------------+" << endl;
+            }
+
+            else if (New_Zone1_price < 0)
+            {
+                cout << "you must make it a postive price!\n";
+                cout << "Press 1 to enter another price\nPress 2 to exit\n";
+                cin >> answer;
+                cout << "+-----------------------------------------------------------------------------+" << endl;
+            }
+            else if (cin.fail())
+            {
+                cin.clear();
+
+                // leave the rest of the line
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+                // Ask the user to enter a valid int number only
+                cout << "Wrong input,Please enter a number" << endl;
+            }
+            else if (New_Zone1_price >= 0)
+            {
+                Zone1_price = New_Zone1_price;
+                break;
+            }
+            else
+            {
+                cout << "Please Enter a vaild choice" << endl;
+            }
+        } while (true);
+    }
+    else if (answer == 2)
+    {
+        do
+        {
+            cout << "enter your new price for this zone: ";
+            cin >> New_Zone2_price;
+            cout << "+-----------------------------------------------------------------------------+" << endl;
+
+            if (New_Zone2_price == Zone2_price)
+            {
+                cout << "it's already current price!\n";
+                cout << "Press 1 to enter anther price\nPress 2 to exit\n";
+                cin >> answer;
+                cout << "+-----------------------------------------------------------------------------+" << endl;
+            }
+
+            else if (New_Zone2_price < 0)
+            {
+                cout << "you must make it a postive price!\n";
+                cout << "Press 1 to enter anther price\nPress 2 to exit\n";
+                cin >> answer;
+                cout << "+-----------------------------------------------------------------------------+" << endl;
+                if (answer == 2)
+                {
+                    changing_price_for_zones__menu();
+                }
+            }
+            else if (cin.fail())
+            {
+                cin.clear();
+
+                // leave the rest of the line
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+                // Ask the user to enter a valid int number only
+                cout << "Wrong input,Please enter a number" << endl;
+            }
+            else if (New_Zone2_price >= 0)
+            {
+                Zone2_price = New_Zone2_price;
+                break;
+            }
+            else
+            {
+                cout << "Please Enter a vaild choice" << endl;
+            }
+        } while (true);
+    }
+    else if (answer == 3)
+    {
+        do
+        {
+            cout << "enter your new price for this zone.\n";
+            cin >> New_Zone3_price;
+            cout << "+-----------------------------------------------------------------------------+" << endl;
+
+            if (New_Zone3_price == Zone3_price)
+            {
+                cout << "it's already current price!\n";
+                cout << "Press 1 to enter anther price\nPress 2 to exit\n";
+                cin >> answer;
+                cout << "+-----------------------------------------------------------------------------+" << endl;
+            }
+
+            else if (New_Zone3_price < 0)
+            {
+                cout << "you must make it a postive price!\n";
+                cout << "Press 1 to enter anther price\nPress 2 to exit\n";
+                cin >> answer;
+                cout << "+-----------------------------------------------------------------------------+" << endl;
+            }
+            else if (cin.fail())
+            {
+                cin.clear();
+
+                // leave the rest of the line
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+                // Ask the user to enter a valid int number only
+                cout << "Wrong input,Please enter a number" << endl;
+            }
+            else if (New_Zone3_price >= 0)
+            {
+                Zone3_price = New_Zone3_price;
+                break;
+            }
+            else
+            {
+                cout << "Please Enter a vaild choice" << endl;
+            }
+        } while (true);
+    }
+    else if (answer == 4)
+    {
+        do
+        {
+            cout << "enter your new price for this zone.\n";
+            cin >> New_Zone4_price;
+            cout << "+-----------------------------------------------------------------------------+" << endl;
+
+            if (New_Zone4_price == Zone4_price)
+            {
+                cout << "it's already current price!\n";
+                cout << "Press 1 to enter anther price\nPress 2 to exit\n";
+                cin >> answer;
+                cout << "+-----------------------------------------------------------------------------+" << endl;
+            }
+
+            else if (New_Zone4_price < 0)
+            {
+                cout << "you must make it a postive price!\n";
+                cout << "Press 1 to enter anther price\nPress 2 to exit\n";
+                cin >> answer;
+            }
+            else if (cin.fail())
+            {
+                cin.clear();
+
+                // leave the rest of the line
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+                // Ask the user to enter a valid int number only
+                cout << "Wrong input,Please enter a number" << endl;
+            }
+            else if (New_Zone4_price >= 0)
+            {
+                Zone4_price = New_Zone4_price;
+                break;
+            }
+            else
+            {
+                cout << "Please Enter a vaild choice" << endl;
+            }
+        } while (true);
+    }
+    else if (answer == 0)
+    {
+        changing_prices_for_zones_for_zones_for_zones_for_zones_for_zones();
+    }
+    else if (cin.fail())
+    {
+        cin.clear();
+
+        // leave the rest of the line
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        // Ask the user to enter a valid int number only
+        cout << "Wrong input,Please enter a number" << endl;
+    }
+    else
+    {
+        cout << "Please Enter a vaild choice" << endl;
+    }
+}
+
+void changing_prices_for_zones_for_zones_for_zones_for_zones_for_zones()
+{
+    int New_Zone1_price;
+    int New_Zone2_price;
+    int New_Zone3_price;
+    int New_Zone4_price;
+    int answer;
+    do
+    {
+        cout << "Press 1 to view zones with prices\nPress 2 to edit zones prices\nPress 3 to return to main menu\n";
+        cin >> answer;
+        cout << "+-----------------------------------------------------------------------------+" << endl;
+
+        if (answer == 1)
+        {
+            cout << "zone-1 price: " << Zone1_price << endl;
+            cout << "zone-2 price: " << Zone2_price << endl;
+            cout << "zone-3 price: " << Zone3_price << endl;
+            cout << "zone-4 price: " << Zone4_price << endl;
+            cout << "+-----------------------------------------------------------------------------+" << endl;
+            changing_prices_for_zones_for_zones_for_zones_for_zones_for_zones();
+        }
+        else if (answer == 2)
+        {
+            do
+            {
+                changing_price_for_zones__menu();
+            } while (true);
+        }
+        else if (answer == 3)
+        {
+            cout << "return to main menu" << endl;
+            admin_main_menu();
+        }
+        else if (cin.fail())
+        {
+            cin.clear();
+
+            // leave the rest of the line
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            // Ask the user to enter a valid int number only
+            cout << "Wrong input,Please enter a number" << endl;
+        }
+        else
+        {
+            cout << "Please Enter a vaild choice" << endl;
+        }
+    } while (answer > 0 || answer < 3);
+}
+
+int zone_to_price(int selected_zone)
+{
+    if (arr_user[global_id].age >= 60) // Apply 50% discount for age >= 60
+    {
+        if (selected_zone == 1)
+            return Zone1_price / 2;
+        else if (selected_zone == 2)
+            return Zone2_price / 2;
+        else if (selected_zone == 3)
+            return Zone3_price / 2;
+        else if (selected_zone == 4)
+            return Zone4_price / 2;
+    }
+    else
+    {
+        if (selected_zone == 1)
+            return Zone1_price;
+        else if (selected_zone == 2)
+            return Zone2_price;
+        else if (selected_zone == 3)
+            return Zone3_price;
+        else if (selected_zone == 4)
+            return Zone4_price;
+    }
+    return -1;
+}
 #pragma endregion
 
 #pragma region subscriptions
-void menu();
+void subscription_system_for_user_main_menu();
 
 void user_data_entry()
 {
@@ -966,11 +1510,12 @@ void subscriptiondataentry(int num)
 {
     if (num == 1)
         users[global_id].subscribiondetails.planType = 'S';
-
     else if (num == 2)
         users[global_id].subscribiondetails.planType = 'G';
     else if (num == 3)
+    {
         users[global_id].subscribiondetails.planType = 'W';
+    }
 }
 
 void calculating_payment_and_expirydate()
@@ -994,24 +1539,25 @@ void calculating_payment_and_expirydate()
         users[global_id].subscribiondetails.remainingTrips = 180;
         if (users[global_id].subscribiondetails.zones == "Zone-1")
         {
-            users[global_id].subscribiondetails.payment = 150;
+            users[global_id].subscribiondetails.payment = (arr_user[global_id].age >= 60) ? subs_prices.scholer[0] / 2 : subs_prices.scholer[0]; // 50% discount for age >= 60
         }
         else if (users[global_id].subscribiondetails.zones == "Zone-2")
         {
-            users[global_id].subscribiondetails.payment = 200;
+            users[global_id].subscribiondetails.payment = (arr_user[global_id].age >= 60) ? subs_prices.scholer[1] / 2 : subs_prices.scholer[1]; // 50% discount for age >= 60
         }
         else if (users[global_id].subscribiondetails.zones == "Zone-3")
         {
-            users[global_id].subscribiondetails.payment = 250;
+            users[global_id].subscribiondetails.payment = (arr_user[global_id].age >= 60) ? subs_prices.scholer[2] / 2 : subs_prices.scholer[2]; // 50% discount for age >= 60
         }
         else if (users[global_id].subscribiondetails.zones == "Zone-4")
         {
-            users[global_id].subscribiondetails.payment = 300;
+            users[global_id].subscribiondetails.payment = (arr_user[global_id].age >= 60) ? subs_prices.scholer[3] / 2 : subs_prices.scholer[4]; // 50% discount for age >= 60
         }
         users[global_id].subscribiondetails.expiryDatedetails.day = users[global_id].subscribiondetails.activationDatedetails.day;
         users[global_id].subscribiondetails.expiryDatedetails.month = (users[global_id].subscribiondetails.activationDatedetails.month + 3) % 12;
         users[global_id].subscribiondetails.expiryDatedetails.year = users[global_id].subscribiondetails.activationDatedetails.year + (users[global_id].subscribiondetails.activationDatedetails.month + 3) / 12;
     }
+
     else if (users[global_id].subscribiondetails.planType == 'G')
     {
         if (duration == 1)
@@ -1019,19 +1565,19 @@ void calculating_payment_and_expirydate()
             users[global_id].subscribiondetails.remainingTrips = 60;
             if (users[global_id].subscribiondetails.zones == "Zone-1")
             {
-                users[global_id].subscribiondetails.payment = 310;
+                users[global_id].subscribiondetails.payment = (arr_user[global_id].age >= 60) ? subs_prices.oneMonth_general[0] / 2 : subs_prices.oneMonth_general[0]; // 50% discount for age >= 60
             }
             else if (users[global_id].subscribiondetails.zones == "Zone-2")
             {
-                users[global_id].subscribiondetails.payment = 365;
+                users[global_id].subscribiondetails.payment = (arr_user[global_id].age >= 60) ? subs_prices.oneMonth_general[1] / 2 : subs_prices.oneMonth_general[1]; // 50% discount for age >= 60
             }
             else if (users[global_id].subscribiondetails.zones == "Zone-3")
             {
-                users[global_id].subscribiondetails.payment = 425;
+                users[global_id].subscribiondetails.payment = (arr_user[global_id].age >= 60) ? subs_prices.oneMonth_general[2] / 2 : subs_prices.oneMonth_general[2]; // 50% discount for age >= 60
             }
             else if (users[global_id].subscribiondetails.zones == "Zone-4")
             {
-                users[global_id].subscribiondetails.payment = 600;
+                users[global_id].subscribiondetails.payment = (arr_user[global_id].age >= 60) ? subs_prices.oneMonth_general[3] / 2 : subs_prices.oneMonth_general[3]; // 50% discount for age >= 60
             }
             users[global_id].subscribiondetails.expiryDatedetails.day = users[global_id].subscribiondetails.activationDatedetails.day;
             users[global_id].subscribiondetails.expiryDatedetails.month = (users[global_id].subscribiondetails.activationDatedetails.month + 1) % 12;
@@ -1042,19 +1588,19 @@ void calculating_payment_and_expirydate()
             users[global_id].subscribiondetails.remainingTrips = 730;
             if (users[global_id].subscribiondetails.zones == "Zone-1")
             {
-                users[global_id].subscribiondetails.payment = 3500;
+                users[global_id].subscribiondetails.payment = (arr_user[global_id].age >= 60) ? subs_prices.oneYear_general[0] / 2 : subs_prices.oneYear_general[0]; // 50% discount for age >= 60
             }
             else if (users[global_id].subscribiondetails.zones == "Zone-2")
             {
-                users[global_id].subscribiondetails.payment = 4000;
+                users[global_id].subscribiondetails.payment = (arr_user[global_id].age >= 60) ? subs_prices.oneYear_general[1] / 2 : subs_prices.oneYear_general[1]; // 50% discount for age >= 60
             }
             else if (users[global_id].subscribiondetails.zones == "Zone-3")
             {
-                users[global_id].subscribiondetails.payment = 4500;
+                users[global_id].subscribiondetails.payment = (arr_user[global_id].age >= 60) ? subs_prices.oneYear_general[2] / 2 : subs_prices.oneYear_general[2]; // 50% discount for age >= 60
             }
             else if (users[global_id].subscribiondetails.zones == "Zone-4")
             {
-                users[global_id].subscribiondetails.payment = 5000;
+                users[global_id].subscribiondetails.payment = (arr_user[global_id].age >= 60) ? subs_prices.oneYear_general[3] / 2 : subs_prices.oneYear_general[3]; // 50% discount for age >= 60
             }
             users[global_id].subscribiondetails.expiryDatedetails.day = users[global_id].subscribiondetails.activationDatedetails.day;
             users[global_id].subscribiondetails.expiryDatedetails.month = users[global_id].subscribiondetails.activationDatedetails.month;
@@ -1084,7 +1630,7 @@ void deductSubscriptionPayment()
         float addAmount;
         if (choice == 'N')
         {
-            menu();
+            subscription_system_for_user_main_menu();
         }
 
         else if (choice == 'Y')
@@ -1337,76 +1883,33 @@ void changeSubscriptionPlan()
         cin >> num;
     }
     subscriptiondataentry(num);
-    calculating_payment_and_expirydate();
+    if (users[global_id].subscribiondetails.planType != 'W')
+    {
+        calculating_payment_and_expirydate();
+    }
     deductSubscriptionPayment();
     cout << "Subscription plan changed successfully!" << endl;
     ++i;
 }
 
-void menu()
+void subscription_system_for_user_main_menu()
 {
+
     int option;
     do
     {
-        cout << "1. Buy Travel Plan" << '\n';
-        cout << "2. View Personal Data" << '\n';
-        cout << "3. Edit Personal Data" << '\n';
-        cout << "4. View Subscription Plan" << '\n';
-        cout << "5. Renew Subscription Plan" << '\n';
-        cout << "6. Change Subscription Plan" << '\n';
-        cout << "7. view your history" << '\n';
-        cout << "0. Exit" << '\n';
+        cout << "1. View Subscription Plan" << '\n';
+        cout << "2. Renew Subscription Plan" << '\n';
+        cout << "3. Change Subscription Plan" << '\n';
+        cout << "4. Back to Main Menu" << '\n';
         cout << "Please select an option: ";
         cin >> option;
         switch (option)
         {
-        case 0:
-            user_main_menu();
         case 1:
-            if (subscipetion_or_not[global_id] == 0)
-            {
-                cout << "1. Scholar Pass\n2. General Pass\n3. Smart Wallet" << endl;
-                cout << "Please enter the plan type: ";
-                int num;
-                cin >> num;
-                while (num < 1 || num > 3)
-                {
-                    cout << "Invalid option. Please enter a valid plan type:" << endl;
-                    cin >> num;
-                }
-                subscriptiondataentry(num);
-                calculating_payment_and_expirydate();
-                if (users[global_id].subscribiondetails.planType == 'G')
-                {
-                    deductSubscriptionPayment();
-                    cout << "Your subscription has been successfully created!" << endl;
-                }
-                else if (users[global_id].subscribiondetails.planType == 'S')
-                {
-                    deductSubscriptionPayment();
-                    cout << "Your subscription has been successfully created!" << endl;
-                }
-                else if (users[global_id].subscribiondetails.planType == 'W')
-                {
-                    cout << "Your Smart Wallet has been successfully created!" << endl;
-                    addFundsToSmartWallet();
-                }
-                subscipetion_or_not[global_id] = 1; // Mark as subscribed
-            }
-            else
-                cout << "you already subscriped.\n";
-
-            break;
-        case 2:
-            viewPersonalData();
-            break;
-        case 3:
-            editPersonalData();
-            break;
-        case 4:
             viewSubscriptionPlan();
             break;
-        case 5:
+        case 2:
             if (subscipetion_or_not[global_id] == 1)
                 renewSubscriptionPlan();
             else
@@ -1414,17 +1917,15 @@ void menu()
                 cout << "you are not subscriped\n";
             }
             break;
-        case 6:
+        case 3:
             changeSubscriptionPlan();
             break;
+        case 4:
+            user_main_menu();
         default:
             cout << "Invalid option! Please select a valid option." << endl;
         }
         cout << endl;
-        if (option == 0)
-        {
-            break;
-        }
         cout << "----------------------------------------" << endl;
         cout << "Do you want to make another operation? (y for Yes, n for No): ";
         char choice;
@@ -1448,7 +1949,7 @@ void menu()
     } while (true);
 }
 
-void system_function()
+void subscriptions_for_registration()
 {
 
     // Allocate memory for users
@@ -1473,7 +1974,54 @@ void system_function()
         cout << "Your zone is " << users[global_id].subscribiondetails.zones << endl;
         cout << "Now, Your zone is selected, move to the subscription step" << endl;
     }
-    menu();
+    int option;
+    cout << "1. Buy Travel Plan" << '\n';
+    cout << "2. Back to Main Menu" << '\n';
+    cout << "Please select an option: ";
+    cin >> option;
+    switch (option)
+    {
+    case 1:
+        if (subscipetion_or_not[global_id] == 0)
+        {
+            cout << "1. Scholar Pass\n2. General Pass\n3. Smart Wallet" << endl;
+            cout << "Please enter the plan type: ";
+            int num;
+            cin >> num;
+            while (num < 1 || num > 3)
+            {
+                cout << "Invalid option. Please enter a valid plan type:" << endl;
+                cin >> num;
+            }
+            subscriptiondataentry(num);
+            calculating_payment_and_expirydate();
+            if (users[global_id].subscribiondetails.planType == 'G')
+            {
+                deductSubscriptionPayment();
+                cout << "Your subscription has been successfully created!" << endl;
+            }
+            else if (users[global_id].subscribiondetails.planType == 'S')
+            {
+                deductSubscriptionPayment();
+                cout << "Your subscription has been successfully created!" << endl;
+            }
+            else if (users[global_id].subscribiondetails.planType == 'W')
+            {
+                cout << "Your Smart Wallet has been successfully created!" << endl;
+                addFundsToSmartWallet();
+            }
+            subscipetion_or_not[global_id] = 1; // Mark as subscribed
+        }
+        else
+            cout << "you already subscriped.\n";
+        break;
+    case 2:
+        user_main_menu();
+    default:
+        cout << "Invalid option! Please select a valid option." << endl;
+    }
+    cout << endl;
+    cout << "----------------------------------------" << endl;
 
     cout << "Thank you for using the Subscription System!" << endl;
 }
@@ -1481,52 +2029,68 @@ void system_function()
 #pragma endregion
 
 #pragma region Rides
+void record_ride()
+{
+    time_t now = time(nullptr);
+    struct tm localTime;
+    localtime_s(&localTime, &now);
+    RideHistory[global_id].ride_of_user[numberf_of_trips].ride_date.tm_mday = localTime.tm_mday;
+    RideHistory[global_id].ride_of_user[numberf_of_trips].ride_date.tm_mon = localTime.tm_mon + 1;
+    RideHistory[global_id].ride_of_user[numberf_of_trips].ride_date.tm_year = localTime.tm_year + 1900;
+    RideHistory[global_id].ride_of_user[numberf_of_trips].ride_date.tm_hour = localTime.tm_hour;
+    RideHistory[global_id].ride_of_user[numberf_of_trips].ride_date.tm_min = localTime.tm_min;
+    RideHistory[global_id].ride_of_user[numberf_of_trips].ride_date.tm_sec = localTime.tm_sec;
+    RideHistory[global_id].ride_of_user[numberf_of_trips].ride_id = rand() % 10000 + 1;
+    RideHistory[global_id].ride_of_user[numberf_of_trips].start_station = start_station;
+    RideHistory[global_id].ride_of_user[numberf_of_trips].end_station = end_station;
+    numberf_of_trips++;
+}
+void output_History_user_version()
+{
+    for (int i = 0; i < numberf_of_trips; i++)
+    {
+        if (RideHistory[global_id].ride_of_user[i].ride_id == 0)
+            continue;
+        cout << "Ride ID: " << RideHistory[global_id].ride_of_user[i].ride_id << endl;
+        cout << "Start Station: " << stationss[RideHistory[global_id].ride_of_user[i].start_station] << endl;
+        cout << "End Station: " << stationss[RideHistory[global_id].ride_of_user[i].end_station] << endl;
+        cout << "Date: " << RideHistory[global_id].ride_of_user[i].ride_date.tm_mday << "/"
+             << RideHistory[global_id].ride_of_user[i].ride_date.tm_mon << "/"
+             << RideHistory[global_id].ride_of_user[i].ride_date.tm_year << endl;
+        cout << "Time: " << RideHistory[global_id].ride_of_user[i].ride_date.tm_hour << ":"
+             << RideHistory[global_id].ride_of_user[i].ride_date.tm_min << ":"
+             << RideHistory[global_id].ride_of_user[i].ride_date.tm_sec << endl;
+        cout << endl;
+    }
+}
+void output_History_admin_version()
+{
+    for (int i = 0; i < number_of_users_and_admin; i++)
+    {
+        if (isUnique[i] == 1 && arr_user[i].role == 'U')
+        {
 
-void enter_startline();
-void enter_endline();
-int choose_line(int line_num, int station_num);
-void input_start_data(int &start_line, int &start);
-void input_end_data(int &end_line, int &end_station);
-void start_loop_odd_cases(int i, int &start, int &end_station, int trans1, int trans2, string arr[]);
-void start_loop_even_cases(int i, int &start, int &end_station, int trans1, int trans2, string arr[]);
-void end_loop(int i, int end_station, string arr[]);
-void same_line_loop(int i, int start, string arr[]);
-void case1(int &start, int &end_station, int trans1, int trans2, string arr[]);
-void case2(int &start, int &end_station, int trans1, int trans2, string arr[]);
-void case3(int &start, int &end_station, int trans1, int trans2, string arr[]);
-void case4(int &start, int &end_station, int trans1, int trans2, string arr[]);
-void case5(int &start, int &end_station, int trans1, int trans2, string arr[]);
-void case6(int &start, int &end_station, int trans1, int trans2, string arr[]);
-void case7(int &start, int &end_station, int trans1, int trans2, string arr[]);
-void case8(int &start, int &end_station, int trans1, int trans2, string arr[]);
-void cases(int &start, int &end_station, int trans1, int trans2, string arr[]);
-void list_intersect_line_1_2(int &start, int &end_station, string arr[], int trans1, int trans2);
-void list_intersect_line_2_3(int &start, int &end_station, string arr[], int trans2, int trans3);
-void list_intersect_line_1_3(int &start, int &end_station, string arr[], int trans1, int trans3);
-int counting_intersected_stations(int &start, int &end_station, int trans1, int trans2);
-void if_intersection(int &start, int &end_station, int &start_line, int &end_line, string arr[], int answer);
-int kit_kat_check(int &end_station, int &start);
-void kitkat_branches(int &end_station, int &start);
-void list_same_line(int &start, int &end_station, string arr[], user_struct arr_users[]);
-void if_same_line(int &start, int &end_station, int &end_line, int &start_line, int answer);
-void check_line(int &start_line, int &end_line, int &end_station, int &start, string arr[], int answer);
-int counting_Rod_to_Cairo(int &end_station, int &start);
-int counting_Cairo_to_Rod(int &end_station, int &start);
-void Rod_to_Cairo_list(int &end_station, int &start, int answer);
-void Cairo_to_Rod_list(int &end_station, int &start, int answer);
-void start_calc(int &start, int &end_station, int &end_line, int &start_line, int answer);
-int current_zone_check(string stations);
-void zone_checker(string stations[], int &current_zone, int i, int &zone_counter);
-int station_to_zone(int numberofstations);
-int string_to_int_zone();
-bool zone_to_zone_check(int selected_zone);
-int zone_to_price(int selected_zone);
-void trips_deduction_general_or_scholar();
-void check_out(int answer, int selected_zone);
-void wallet_dedcution(int selected_zone);
-void trip_not_valid(int start, int end_station, int end_line, int start_line, int answer);
-// void initialize_users();
-void system_ride();
+            cout << "User ID: " << arr_user[i].id << endl;
+            cout << "User Name: " << arr_user[i].name << endl;
+            cout << "Ride History:" << endl;
+            for (int j = 0; j < numberf_of_trips; j++)
+            {
+                if (RideHistory[i].ride_of_user[j].ride_id == 0)
+                    continue;
+                cout << "Ride ID: " << RideHistory[i].ride_of_user[j].ride_id << endl;
+                cout << "Start Station: " << stationss[RideHistory[i].ride_of_user[j].start_station] << endl;
+                cout << "End Station: " << stationss[RideHistory[i].ride_of_user[j].end_station] << endl;
+                cout << "Date: " << RideHistory[i].ride_of_user[j].ride_date.tm_mday << "/"
+                     << RideHistory[i].ride_of_user[j].ride_date.tm_mon << "/"
+                     << RideHistory[i].ride_of_user[j].ride_date.tm_year << endl;
+                cout << "Time: " << RideHistory[i].ride_of_user[j].ride_date.tm_hour << ":"
+                     << RideHistory[i].ride_of_user[j].ride_date.tm_min << ":"
+                     << RideHistory[i].ride_of_user[j].ride_date.tm_sec << endl;
+                cout << endl;
+            }
+        }
+    }
+}
 
 void start_loop_odd_cases(int i, int &start, int &end_station, int trans1, int trans2, string arr[])
 {
@@ -1936,11 +2500,11 @@ void list_intersect_line_1_3(int &start, int &end_station, string arr[], int tra
     cases(start, end_station, trans1, trans3, arr);
 }
 
-int counting_intersected_stations(int &start, int &end_station, int trans1, int trans2)
+int counting_intersected_stations(int &start_station, int &end_station, int trans1, int trans2)
 {
     if (start_station > end_station)
     {
-        trans2 -= start;
+        trans2 -= start_station;
         trans1 -= end_station;
         trans1 = abs(trans1);
         trans2 = abs(trans2);
@@ -1948,7 +2512,7 @@ int counting_intersected_stations(int &start, int &end_station, int trans1, int 
     }
     else if (start_station < end_station)
     {
-        trans1 -= start;
+        trans1 -= start_station;
         trans2 -= end_station;
         trans1 = abs(trans1);
         trans2 = abs(trans2);
@@ -1956,7 +2520,7 @@ int counting_intersected_stations(int &start, int &end_station, int trans1, int 
     }
 }
 
-void input_start_data(int &start_line, int &start)
+void input_start_data(int &start_line, int &start_station)
 {
     do
     {
@@ -1978,9 +2542,9 @@ void input_start_data(int &start_line, int &start)
             if (start_line > 0 && start_line < 4)
             {
                 cout << "Please choose start_stationstation" << endl;
-                start_station = choose_line(start_line, start);
+                start_station = choose_line(start_line, start_station);
                 cout << "+-----------------------------------------------------------------------------+" << endl;
-                ++ride_freq_entry[start];
+                ++ride_freq_entry[start_station];
                 break;
             }
             else
@@ -2049,18 +2613,29 @@ void if_intersection(int &start, int &end_station, int &start_line, int &end_lin
         {
             selected_stations = counting_intersected_stations(start, end_station, Al_Shohadaa_line1, Al_Shohadaa_line2);
             selected_zone = ((station_to_zone(selected_stations))); // converting station to zone
-            if (zone_to_zone_check(selected_zone))                  // comparing the converted zone with user zone
+            if (arr_user[global_id].subscription_type != 'W')
+            {
+                if (zone_to_zone_check(selected_zone)) // comparing the converted zone with user zone
+                {
+                    cout << "+-----------------------------------------------------------------------------+" << endl;
+                    list_intersect_line_1_2(start, end_station, stations); // lisiting stations of the trip
+                    cout << "Number of selected stations = " << selected_stations << endl
+                         << endl;
+                    check_out(answer, selected_zone); // check out to deduct according to the user plantype
+                }
+
+                else
+                {
+                    trip_not_valid(start, end_station, end_line, start_line, answer);
+                }
+            }
+            else
             {
                 cout << "+-----------------------------------------------------------------------------+" << endl;
                 list_intersect_line_1_2(start, end_station, stations); // lisiting stations of the trip
                 cout << "Number of selected stations = " << selected_stations << endl
                      << endl;
                 check_out(answer, selected_zone); // check out to deduct according to the user plantype
-            }
-
-            else
-            {
-                trip_not_valid(start, end_station, end_line, start_line, answer);
             }
         }
     }
@@ -2122,9 +2697,9 @@ int kit_kat_check(int &end_station, int &start)
         return 2;
     else if (((start_station > kit_kat_1_station && start_station <= Rod_axis_station) && end_station > Rod_axis_station)) // start_stationat Rod-El Farag and end at Cairo
         return 5;
-    else if ((end_station > kit_kat_1_station && end_station <= Rod_axis_station) && start_station > Rod_axis_station) // start_stationat Cairo and end at Rod
+    else if ((end_station > kit_kat_1_station && end_station <= Rod_axis_station) && start_station > Rod_axis_station) // start at Cairo and end at Rod
         return 6;
-    else if (start_station > Rod_axis_station) // start_stationonly at Cairo Branch
+    else if (start_station > Rod_axis_station) // start at Cairo Branch
         return 3;
     else if (end_station > Rod_axis_station) // end only at Cairo Branch
         return 4;
@@ -2283,7 +2858,7 @@ void check_line(int &start_line, int &end_line, int &end_station, int &start, st
     }
 }
 
-int choose_line(int line_num, int station_num)
+int choose_line(int &line_num, int &station_num)
 {
     if (line_num == 1)
     {
@@ -2460,6 +3035,7 @@ void start_calc(int &start, int &end_station, int &end_line, int &start_line, in
                 if (answer == 1)
                 {
                     check_line(start_line, end_line, end_station, start, stations, answer);
+
                     break;
                 }
                 else if (answer == 2)
@@ -2612,25 +3188,18 @@ int string_to_int_zone() // we need integers in calculation
 
 bool zone_to_zone_check(int selected_zone)
 {
-    users[global_id].zone = string_to_int_zone();
-    if (selected_zone <= users[global_id].zone)
+    if (users[global_id].subscribiondetails.planType == 'S' || users[global_id].subscribiondetails.planType == 'G')
+    {
+        users[global_id].zone = string_to_int_zone();
+        if (selected_zone <= users[global_id].zone)
+            return 1;
+        else
+            return 0;
+    }
+    else if (users[global_id].subscribiondetails.planType == 'W')
+    {
         return 1;
-    else
-        return 0;
-}
-
-int zone_to_price(int selected_zone)
-{
-    if (selected_zone == 1)
-        return 8;
-    else if (selected_zone == 2)
-        return 10;
-    else if (selected_zone == 3)
-        return 15;
-    else if (selected_zone == 4)
-        return 20;
-    else
-        return -1;
+    }
 }
 
 void trips_deduction_general_or_scholar()
@@ -2650,10 +3219,10 @@ void trips_deduction_general_or_scholar()
             cout << "+-----------------------------------------------------------------------------+" << endl;
             cout << "You have no more trips" << endl
                  << "Please top up your balance and renew subscription" << endl
-                 << "Enter 1 to top up your balance" << endl
-                 << "Enter 2 return to main menu" << endl;
+                 << "Enter 1 return to main menu" << endl;
             if (answer == 1)
             {
+                user_main_menu();
             }
             cout << "+-----------------------------------------------------------------------------+" << endl;
 
@@ -2670,11 +3239,17 @@ void trips_deduction_general_or_scholar()
 
 void wallet_dedcution(int selected_zone)
 {
-
-    if (users[global_id].subscribiondetails.payment >= zone_to_price(selected_zone))
+    int price = zone_to_price(selected_zone);
+    if (price == -1)
     {
-        users[global_id].subscribiondetails.payment -= zone_to_price(selected_zone);
-        cout << "Your trip is successfully booked and " << zone_to_price(selected_zone)
+        cout << "Invalid zone selected. Please try again." << endl;
+        user_main_menu();
+        return;
+    }
+    if (users[global_id].subscribiondetails.payment >= price)
+    {
+        users[global_id].subscribiondetails.payment -= price;
+        cout << "Your trip is successfully booked and " << price
              << " L.E. is deducted " << endl
              << "Your current balance is " << users[global_id].balance << endl
              << "Your smart wallet holds " << users[global_id].subscribiondetails.payment << "L.E." << endl;
@@ -2683,9 +3258,8 @@ void wallet_dedcution(int selected_zone)
     {
         cout << "Your current balance is " << users[global_id].balance << endl
              << "Your smart wallet holds " << users[global_id].subscribiondetails.payment << "L.E." << endl
-             << "Please Recharge and Try again" << endl
-             << " add a function here that return user to menu ";
-        // add a function here that return user to menu
+             << "Please Recharge and Try again" << endl;
+        user_main_menu();
     }
 }
 
@@ -2694,7 +3268,6 @@ void check_out(int answer, int selected_zone)
     cout << "+-----------------------------------------------------------------------------+" << endl;
     do
     {
-
         cout << "Enter 1 to checkout" << endl;
         cout << "Enter 2 to cancel" << endl;
         cin >> answer;
@@ -2712,13 +3285,31 @@ void check_out(int answer, int selected_zone)
                     wallet_dedcution(selected_zone);
                 }
 
-                user_main_menu();
+                // Redirect based on role
+                if (arr_user[global_id].role == 'U')
+                {
+                    record_ride();
+                    user_main_menu();
+                }
+                else if (arr_user[global_id].role == 'A')
+                {
+                    admin_main_menu();
+                }
             }
             else if (answer == 2)
             {
                 --ride_freq_entry[start_station];
                 --ride_freq_entry[end_station];
-                user_main_menu();
+
+                // Redirect based on role
+                if (arr_user[global_id].role == 'U')
+                {
+                    user_main_menu();
+                }
+                else if (arr_user[global_id].role == 'A')
+                {
+                    admin_main_menu();
+                }
             }
 
             break;
@@ -2726,18 +3317,14 @@ void check_out(int answer, int selected_zone)
         else if (cin.fail())
         {
             cin.clear();
-
-            // leave the rest of the line
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-            // Ask the user to enter a valid int number only
             cout << "+-----------------------------------------------------------------------------+" << endl;
             cout << "Wrong input,Please enter a number" << endl;
         }
         else
         {
             cout << "+-----------------------------------------------------------------------------+" << endl;
-            cout << "Please Enter a vaild choice" << endl;
+            cout << "Please Enter a valid choice" << endl;
         }
     } while (true);
 }
@@ -2769,7 +3356,9 @@ void trip_not_valid(int start, int end_station, int end_line, int start_line, in
                 break;
             }
             else if (answer == 2)
-                cout << "add main menu here" << endl; // Gaber main menu function
+            {
+                user_main_menu();
+            }
         }
 
     } while (true);
@@ -2785,6 +3374,9 @@ void system_ride()
 #pragma endregion
 
 #pragma region History & Statistics
+void System_History()
+{
+}
 void statistics()
 {
     for (int i = 0; i < 1001; ++i)
@@ -2825,7 +3417,7 @@ void statistics()
     cout << "the most Entered station is " << stationss[max_element(ride_freq_entry, ride_freq_entry + 90) - ride_freq_entry] << '\n';
     cout << "the most Exit station is " << stationss[max_element(ride_freq_exit, ride_freq_exit + 90) - ride_freq_entry] << '\n';
 }
-void user_history(int id)
+void changed_subscription_history(int id)
 {
     if (previoussub[0] != '\0')
     {
@@ -2846,7 +3438,7 @@ void user_history(int id)
 }
 void storage_the_data_of_statistics()
 {
-    ofstream file("statistics.txt", ios::app);
+    ofstream file("statistics.txt", ios::out);
     if (file.is_open())
     {
         for (int i = 1; i <= 89; ++i)
@@ -2878,7 +3470,218 @@ void read_statistics()
         cout << "Unable to open the file";
     }
 }
+
 #pragma endregion
+
+void add_station(int &line_size, string arr[])
+{
+    cout << "At which position do you want to add a station" << '\n';
+    int pos_new_station;
+    cin >> pos_new_station;
+    for (int i = line_size; i >= pos_new_station - 1; i--)
+    {
+        arr[i + 1] = arr[i];
+    }
+
+    cout << "Enter a name for the added station" << endl;
+    string new_station_name;
+    cin.ignore();
+    getline(cin, new_station_name);
+    arr[pos_new_station - 1] = new_station_name;
+    ++line_size;
+    for (int i = Rod_axis_station; i > pos_new_station - 1; i--)
+    {
+        stations[i] = stations[i - 1];
+    }
+    stations[pos_new_station - 1] = new_station_name;
+    ++Rod_axis_station;
+
+#if 1
+    if (pos_new_station <= end_line1 && pos_new_station >= start_line1)
+    {
+        ++Al_Shohadaa_line2;
+        ++Attaba_line2;
+        ++Attaba_line3;
+        ++Nasser_line3;
+        ++start_line2;
+        ++start_line3;
+        ++end_line2;
+        ++end_line3;
+        if (pos_new_station < Al_Shohadaa_line1)
+        {
+            ++Al_Shohadaa_line1;
+            ++Nasser_line1;
+            ++end_line1;
+        }
+        else if (pos_new_station < Nasser_line1 && pos_new_station > Al_Shohadaa_line1)
+        {
+            ++Nasser_line1;
+            ++end_line1;
+        }
+        else
+        {
+            ++end_line1;
+        }
+    }
+    else if (pos_new_station <= end_line2 && pos_new_station >= start_line2)
+    {
+        ++Attaba_line3;
+        ++Nasser_line3;
+        ++end_line3;
+        ++start_line3;
+        if (pos_new_station < Al_Shohadaa_line2)
+        {
+            ++Al_Shohadaa_line2;
+            ++Attaba_line2;
+            ++end_line2;
+        }
+        else if (pos_new_station < Attaba_line2)
+        {
+            ++Attaba_line2;
+            ++end_line2;
+        }
+        else
+        {
+            ++end_line2;
+        }
+    }
+    else if (pos_new_station <= end_line3 && pos_new_station >= start_line3)
+    {
+        ++end_line3;
+        if (pos_new_station < Attaba_line3)
+        {
+            ++Attaba_line3;
+            ++Nasser_line3;
+        }
+        else if (pos_new_station < Nasser_line3)
+        {
+            ++Nasser_line3;
+        }
+    }
+#endif
+    cout << '\n';
+    for (int i = 0; i < Rod_axis_station; i++)
+    {
+        cout << stations[i] << endl;
+    }
+    cout << "\nyou added this station : " << new_station_name << '\n';
+}
+
+void remove_station(int &line_size, string arr_remove[])
+{
+    while (true)
+    {
+        cout << "which position do you want to remove a station" << '\n';
+        int pos_removed_station;
+        cin >> pos_removed_station;
+
+        if (!(pos_removed_station == Nasser_line3 || pos_removed_station == Nasser_line1 ||
+              pos_removed_station == Attaba_line3 || pos_removed_station == Attaba_line2 ||
+              pos_removed_station == Al_Shohadaa_line2 || pos_removed_station == Al_Shohadaa_line1))
+        {
+            string removedsation = arr_remove[pos_removed_station - 1];
+            for (int i = pos_removed_station - 1; i < line_size; ++i)
+            {
+                arr_remove[i] = arr_remove[i + 1];
+            }
+
+            --line_size;
+#if 1
+
+            if (pos_removed_station <= end_line1 && pos_removed_station >= start_line1)
+            {
+                --Al_Shohadaa_line2;
+                --Attaba_line2;
+                --Attaba_line3;
+                --Nasser_line3;
+                --start_line2;
+                --start_line3;
+                --end_line2;
+                --end_line3;
+                if (pos_removed_station < Al_Shohadaa_line1)
+                {
+                    --Al_Shohadaa_line1;
+                    --Nasser_line1;
+                    --end_line1;
+                }
+                else if (pos_removed_station < Nasser_line1 && pos_removed_station > Al_Shohadaa_line1)
+                {
+                    --Nasser_line1;
+                    --end_line1;
+                }
+                else
+                {
+                    --end_line1;
+                }
+            }
+            else if (pos_removed_station <= end_line2 && pos_removed_station >= start_line2)
+            {
+                --Attaba_line3;
+                --Nasser_line3;
+                --end_line3;
+                --start_line3;
+                if (pos_removed_station < Al_Shohadaa_line2)
+                {
+                    --Al_Shohadaa_line2;
+                    --Attaba_line2;
+                    --end_line2;
+                }
+                else if (pos_removed_station < Attaba_line2)
+                {
+                    --Attaba_line2;
+                    --end_line2;
+                }
+                else
+                {
+                    --end_line2;
+                }
+            }
+            else if (pos_removed_station <= end_line3 && pos_removed_station >= start_line3)
+            {
+                --end_line3;
+                if (pos_removed_station < Attaba_line3)
+                {
+                    --Attaba_line3;
+                    --Nasser_line3;
+                }
+                else if (pos_removed_station < Nasser_line3)
+                {
+                    --Nasser_line3;
+                }
+            }
+#endif
+            cout << '\n';
+            for (int i = 0; i < line_size; i++)
+            {
+                cout << arr_remove[i] << endl;
+            }
+            cout << "\nthe removed station is : " << removedsation << '\n';
+            break;
+        }
+        else
+        {
+            cout << "you can not remove transaction station\n";
+        }
+    }
+}
+
+void edit(int line_size, string global_line[])
+{
+    int number;
+    cout << "enter which station you want to change it is name : ";
+    cin >> number;
+    cout << '\n';
+    string currentname = global_line[number - 1];
+    cin.ignore();
+    cout << "the ned name of the station : ";
+    getline(cin, global_line[number - 1]);
+    cout << '\n';
+    for (int i = 0; i < line_size; i++)
+    {
+        cout << global_line[i] << '\n';
+    }
+    cout << "\nyou changed the name of station from " << currentname << " into " << global_line[number - 1] << '\n';
+}
 
 int main()
 {
